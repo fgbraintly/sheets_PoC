@@ -1,0 +1,1 @@
+Typescript PoC to upload and share file with Google Api

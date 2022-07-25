@@ -1,0 +1,21 @@
+{
+  "name": "sheets_ts",
+  "version": "1.0.0",
+  "description": "google sheets script",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/js/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/gapi": "^0.0.42",
+    "google-auth-library": "^8.1.1",
+    "googleapis": "^105.0.0",
+    "nodemon": "^2.0.19"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.1"
+  }
+}
