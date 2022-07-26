@@ -21,25 +21,23 @@ class Calls {
         this.coach = "";
         this.date = "";
         this.recordingUrl = "";
-        this.axios = undefined;
-        this.axios = new HttpService_1.default().axios;
+        this.axios = null;
     }
     getCalls(_institutionId) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            this.axios = yield new HttpService_1.default().httpApi();
             try {
-                const response = yield ((_a = this.axios) === null || _a === void 0 ? void 0 : _a.request({
+                const response = yield this.axios.request({
                     method: "GET",
                     url: "/api/app/backoffice/calls",
                     params: {
                         institution_id: _institutionId,
                     },
-                }));
+                });
                 const calls = response === null || response === void 0 ? void 0 : response.data;
-                console.log(JSON.stringify(calls, null, 2));
             }
             catch (error) {
-                console.log(error);
+                throw new Error("Failed to fetch calls");
             }
         });
     }

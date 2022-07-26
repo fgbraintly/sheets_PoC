@@ -1,14 +1,18 @@
 import Calls from "./Calls";
 import GoogleDrive from "./GoogleDrive";
 import GoogleSheets from "./GoogleSheets";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 (async () => {
+
   const sheets = new GoogleSheets();
   const drive = new GoogleDrive();
 
   const calls = new Calls();
 
-  calls.getCalls("6");
+  // await calls.getCalls("6");
   // let folder = (await drive.createFolder("CLLPESTR")) || "";
   // let folderList = await drive.listFolders();
 

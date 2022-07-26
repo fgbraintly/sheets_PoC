@@ -7,28 +7,27 @@ class Calls {
   private coach: string = "";
   private date: string = "";
   private recordingUrl: string = "";
-  private axios: AxiosInstance | undefined = undefined;
+  private axios: AxiosInstance | null;
+
   constructor() {
-    this.axios = new HttpService().axios;
+    this.axios = null;
   }
 
   async getCalls(_institutionId: string) {
+    this.axios = await new HttpService().httpApi();
     try {
-        const response = await this.axios?.request({
-          method: "GET",
-          url: "/api/app/backoffice/calls",
-          params: {
-            institution_id: _institutionId,
-          },
-        });
-    
-        const calls = response?.data;
-        console.log(JSON.stringify(calls, null, 2));
+      const response = await this.axios.request({
+        method: "GET",
+        url: "/api/app/backoffice/calls",
+        params: {
+          institution_id: _institutionId,
+        },
+      });
+      const calls = response?.data;
+      
     } catch (error) {
-        console.log(error);
-        
+      throw new Error("Failed to fetch calls");
     }
-
   }
 }
 

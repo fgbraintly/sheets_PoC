@@ -1,3 +1,3 @@
 export default {
-  apiURL: process.env.REACT_APP_API || "http://127.0.0.1:8000",
+  apiURL: process.env.REACT_APP_API || "http://test-api-t2t.braintlylabs.com/",
 };

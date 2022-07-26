@@ -16,7 +16,7 @@ const axios_1 = __importDefault(require("axios"));
 const apiURL_1 = __importDefault(require("./apiURL"));
 class HttpService {
     constructor() {
-        this.axios = undefined;
+        this.accessToken = "";
         const config = {
             baseURL: apiURL_1.default.apiURL,
             headers: {
@@ -26,10 +26,43 @@ class HttpService {
         };
         this.axios = axios_1.default.create(config);
     }
-    auth() {
+    authHttp() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            (_a = this.axios) === null || _a === void 0 ? void 0 : _a.request({});
+            console.log(process.env.CLIENT_ID);
+            try {
+                const response = yield this.axios.request({
+                    method: "POST",
+                    url: "oauth/token",
+                    data: {
+                        client_id: process.env.CLIENT_ID,
+                        client_secret: process.env.CLIENT_SECRET,
+                        grant_type: process.env.GRANT_TYPE,
+                        password: process.env.PASSWORD,
+                        username: process.env.USERNAME,
+                    },
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                this.accessToken = (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.access_token;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    httpApi() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.authHttp();
+            return axios_1.default.create({
+                baseURL: apiURL_1.default.apiURL,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    Authorization: `Bearer ${this.accessToken}`,
+                },
+            });
         });
     }
 }
