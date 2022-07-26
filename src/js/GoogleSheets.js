@@ -58,5 +58,20 @@ class GoogleSheets {
             }
         });
     }
+    updateFile(values, fileId, _range, _majorDimension) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const resource = {
+                fields: "id",
+                requestBody: {
+                    values,
+                },
+                spreadsheetId: fileId,
+                range: _range,
+                valueInputOption: _majorDimension
+            };
+            const result = yield ((_a = this.googlesheets) === null || _a === void 0 ? void 0 : _a.spreadsheets.values.update());
+        });
+    }
 }
 exports.default = GoogleSheets;

@@ -33,16 +33,18 @@ class GoogleDrive {
                 //   const prevParents = file?.data?.parents?.map(parent =>  parent)
                 console.log(JSON.stringify(file === null || file === void 0 ? void 0 : file.data.parents, null, 2));
             }
-            catch (error) { }
+            catch (error) {
+                console.log(error);
+            }
         });
     }
-    createFolder() {
+    createFolder(institutionalCode) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let params = {
                 requestBody: {
                     mimeType: "application/vnd.google-apps.folder",
-                    name: "InstitutionCode",
+                    name: institutionalCode,
                 },
                 fields: "id",
             };
@@ -71,6 +73,44 @@ class GoogleDrive {
             catch (err) {
                 throw new Error("Failed to share file");
             }
+        });
+    }
+    listFiles() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                pageSize: 10,
+                fields: "nextPageToken, files(id, name)",
+            };
+            const response = yield ((_a = this.drive) === null || _a === void 0 ? void 0 : _a.files.list(params));
+            const files = response === null || response === void 0 ? void 0 : response.data.files;
+            return files;
+        });
+    }
+    listFolders() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                q: "mimeType = 'application/vnd.google-apps.folder'",
+            };
+            try {
+                const response = yield ((_a = this.drive) === null || _a === void 0 ? void 0 : _a.files.list(params));
+                const files = response === null || response === void 0 ? void 0 : response.data.files;
+                return files;
+            }
+            catch (error) {
+                throw new Error("Failed to list folders");
+            }
+        });
+    }
+    getFile(fileId) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const resource = {
+                fileId: fileId,
+            };
+            const response = yield ((_a = this.drive) === null || _a === void 0 ? void 0 : _a.files.get(resource));
+            return response === null || response === void 0 ? void 0 : response.data.id;
         });
     }
 }

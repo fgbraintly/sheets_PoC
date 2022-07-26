@@ -46,6 +46,19 @@ class GoogleSheets {
       throw new Error("Failed to getValues");
     }
   }
+
+  async updateFile(values: any[][], fileId: string, _range: string,_majorDimension:string) {
+    const resource: sheets_v4.Params$Resource$Spreadsheets$Values$Update = {
+      fields: "id",
+      requestBody: {
+        values,
+      },
+      spreadsheetId: fileId,
+      range: _range,
+      valueInputOption:_majorDimension
+    };
+    const result = await this.googlesheets?.spreadsheets.values.update();
+  }
 }
 
 export default GoogleSheets;
