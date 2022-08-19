@@ -2,24 +2,24 @@ import { drive_v3, google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
 import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
 import GoogleAuthentication from "./GoogleAuth";
+import { file } from "googleapis/build/src/apis/file";
 
 class GoogleDrive {
   private auth: GoogleAuth<JSONClient> | null = null;
-  private drive: drive_v3.Drive | null = null;
+  private drive: drive_v3.Drive;
   constructor() {
     this.auth = GoogleAuthentication.generateAuth();
     this.drive = google.drive({ version: "v3", auth: this.auth });
   }
 
   async moveFilesToFolder(fileId: string, folderId: string) {
-    let params: drive_v3.Params$Resource$Files$Get = {
-      fileId: fileId,
-      fields: "parents",
-    };
     try {
-      const file = await this.drive?.files.get(params);
-      //   const prevParents = file?.data?.parents?.map(parent =>  parent)
-      console.log(JSON.stringify(file?.data.parents, null, 2));
+      const response = await this.drive?.files.update({
+        fileId: fileId,
+        addParents: folderId,
+        fields: "id,parents",
+      });
+      console.log(JSON.stringify(response, null, 2));
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +36,7 @@ class GoogleDrive {
 
     try {
       const file = await this.drive?.files.create(params);
-      return file?.data.id;
+      return <string>file?.data.id;
     } catch (error) {
       throw new Error("Failed to create folder");
     }
@@ -54,8 +54,8 @@ class GoogleDrive {
       fields: "id",
     };
     try {
-      const res = await this.drive?.permissions.create(params);
-      const fileId = res?.data.id;
+      const response = await this.drive?.permissions.create(params);
+      const fileId = <string>response?.data.id;
       return fileId;
     } catch (err) {
       throw new Error("Failed to share file");
@@ -78,24 +78,31 @@ class GoogleDrive {
       q: "mimeType = 'application/vnd.google-apps.folder'",
     };
     try {
-      
       const response = await this.drive?.files.list(params);
       const files = response?.data.files;
-  
+
       return files;
     } catch (error) {
       throw new Error("Failed to list folders");
-      
     }
   }
 
-  async getFile(fileId: string) {
-    const resource: drive_v3.Params$Resource$Files$Get = {
-      fileId: fileId,
-    };
-    const response = await this.drive?.files.get(resource);
+  async searchFolder(institutionName: string) {
+    const folders = await this.listFolders();
 
-    return response?.data.id;
+    const folder = folders?.find((folder) => folder.name === institutionName);
+
+    return <string>folder?.id;
+  }
+
+  async getFileByCode(_code: string) {
+    const params: drive_v3.Params$Resource$Files$List = {
+      q: `name = '${_code}'`,
+      fields:'files(id,name,parents)'
+    };
+    const response = await this.drive.files.list(params);
+    const files = <drive_v3.Schema$File[]>response.data.files;
+    return files[0];
   }
 }
 

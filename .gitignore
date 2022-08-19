@@ -105,3 +105,5 @@ dist
 
 #Crenciales para google auth
 src/json/*.*
+
+src/js

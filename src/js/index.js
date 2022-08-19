@@ -36,36 +36,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Calls_1 = __importDefault(require("./Calls"));
-const GoogleDrive_1 = __importDefault(require("./GoogleDrive"));
-const GoogleSheets_1 = __importDefault(require("./GoogleSheets"));
 const dotenv = __importStar(require("dotenv"));
+const GoogleDrive_1 = __importDefault(require("./services/GoogleDrive"));
+const GoogleSheets_1 = __importDefault(require("./services/GoogleSheets"));
+const SequelizeService_1 = __importDefault(require("./services/SequelizeService"));
 dotenv.config();
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const sheets = new GoogleSheets_1.default();
+    var _a, _b;
+    const callService = new Calls_1.default();
     const drive = new GoogleDrive_1.default();
-    const calls = new Calls_1.default();
-    // await calls.getCalls("6");
-    // let folder = (await drive.createFolder("CLLPESTR")) || "";
-    // let folderList = await drive.listFolders();
-    // folderList?.map(async (folder) => {
-    //   let reGetFolder = await drive.getFile(String(folder?.id));
-    //   let sharedFolder = await drive.shareFiles(
-    //     "user",
-    //     "franco.garancini@braintly.com",
-    //     "reader",
-    //     String(folder?.id)
-    //   );
-    //   console.log(`GetFile: ${reGetFolder}`);
-    // });
-    // console.log(`Folder List ${JSON.stringify(folderList, null, 2)}`);
-    // let file = (await sheets.createFile("Testing from index")) || "";
-    // if (file != "") {
-    //   const share = await drive.shareFiles(
-    //     "user",
-    //     "franco.garancini@braintly.com",
-    //     "reader",
-    //     file
-    //   );
-    //   console.log(share);
-    // }
+    const sheets = new GoogleSheets_1.default();
+    const sequelizeService = new SequelizeService_1.default();
+    const institutions = yield sequelizeService.queryCodes();
+    for (const institution of institutions) {
+        let folder;
+        folder = yield drive.searchFolder(institution.name);
+        //Si no existe la carpeta de esa institucion
+        if (folder === undefined) {
+            //Crea la carpeta
+            folder = yield drive.createFolder(institution.name);
+            //Crea la hoja
+            const sheetID = yield sheets.createFile(institution.code);
+            //Mueve la hoja a la carpeta
+            yield drive.moveFilesToFolder(sheetID, folder);
+            //Genera el reporte
+            yield callService.generateReport(institution.code, sheetID);
+        }
+        else {
+            //Si existe la carpeta
+            const file = yield drive.getFileByCode(institution.code);
+            //Y no existe el arrchivo lo crea
+            if (file === undefined) {
+                const sheetID = yield sheets.createFile(institution.code);
+                yield callService.generateReport(institution.code, sheetID);
+                yield drive.moveFilesToFolder(sheetID, folder);
+            }
+            else if (((_a = file.parents) === null || _a === void 0 ? void 0 : _a[0]) !== undefined &&
+                ((_b = file.parents) === null || _b === void 0 ? void 0 : _b[0]) === folder) {
+                //Si la carpeta es padre del archivo de ese codigo
+                //Sobrescribe el reporte
+                yield callService.generateReport(institution.code, file === null || file === void 0 ? void 0 : file.id, true);
+            }
+        }
+        // Comparto la carpeta
+        yield drive.shareFiles("user", "franco.garancini@braintly.com", "reader", folder);
+    }
 }))();

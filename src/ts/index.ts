@@ -1,45 +1,60 @@
 import Calls from "./Calls";
-import GoogleDrive from "./GoogleDrive";
-import GoogleSheets from "./GoogleSheets";
 import * as dotenv from "dotenv";
+import GoogleDrive from "./services/GoogleDrive";
+import GoogleSheets from "./services/GoogleSheets";
+import SequelizeService from "./services/SequelizeService";
+import { file } from "googleapis/build/src/apis/file";
 
 dotenv.config();
 
 (async () => {
-
-  const sheets = new GoogleSheets();
+  const callService = new Calls();
   const drive = new GoogleDrive();
+  const sheets = new GoogleSheets();
+  const sequelizeService = new SequelizeService();
 
-  const calls = new Calls();
+  const institutions = await sequelizeService.queryCodes();
 
-  // await calls.getCalls("6");
-  // let folder = (await drive.createFolder("CLLPESTR")) || "";
-  // let folderList = await drive.listFolders();
-
-  // folderList?.map(async (folder) => {
-  //   let reGetFolder = await drive.getFile(String(folder?.id));
-  //   let sharedFolder = await drive.shareFiles(
-  //     "user",
-  //     "franco.garancini@braintly.com",
-  //     "reader",
-  //     String(folder?.id)
-  //   );
-  //   console.log(`GetFile: ${reGetFolder}`);
-  // });
-
-  // console.log(`Folder List ${JSON.stringify(folderList, null, 2)}`);
-
-  // let file = (await sheets.createFile("Testing from index")) || "";
-
-  // if (file != "") {
-  //   const share = await drive.shareFiles(
-  //     "user",
-  //     "franco.garancini@braintly.com",
-  //     "reader",
-  //     file
-  //   );
-
-  //   console.log(share);
-
-  // }
+  for (const institution of institutions) {
+    let folder;
+    folder = await drive.searchFolder(institution.name);
+    //Si no existe la carpeta de esa institucion
+    if (folder === undefined) {
+      //Crea la carpeta
+      folder = await drive.createFolder(institution.name);
+      //Crea la hoja
+      const sheetID = await sheets.createFile(institution.code);
+      //Mueve la hoja a la carpeta
+      await drive.moveFilesToFolder(sheetID, folder);
+      //Genera el reporte
+      await callService.generateReport(institution.code, sheetID);
+    } else {
+      //Si existe la carpeta
+      const file = await drive.getFileByCode(institution.code);
+      //Y no existe el arrchivo lo crea
+      if (file === undefined) {
+        const sheetID = await sheets.createFile(institution.code);
+        await callService.generateReport(institution.code, sheetID);
+        await drive.moveFilesToFolder(sheetID, folder);
+      } else if (
+        file.parents?.[0] !== undefined &&
+        file.parents?.[0] === folder
+        ) {
+        //Si la carpeta es padre del archivo de ese codigo
+        //Sobrescribe el reporte
+        await callService.generateReport(
+          institution.code,
+          <string>file?.id,
+          true
+        );
+      }
+    }
+    // Comparto la carpeta
+    await drive.shareFiles(
+      "user",
+      "franco.garancini@braintly.com",
+      "reader",
+      folder
+    );
+  }
 })();
