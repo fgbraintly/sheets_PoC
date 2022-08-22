@@ -4,10 +4,12 @@ import GoogleDrive from "./services/GoogleDrive";
 import GoogleSheets from "./services/GoogleSheets";
 import SequelizeService from "./services/SequelizeService";
 import { file } from "googleapis/build/src/apis/file";
+import { Context, APIGatewayProxyResult, APIGatewayEvent } from 'aws-lambda';
 
 dotenv.config();
 
-(async () => {
+const generateSheetInGoogleDrive = async () => {
+  console.log("Executing...");
   const callService = new Calls();
   const drive = new GoogleDrive();
   const sheets = new GoogleSheets();
@@ -57,4 +59,22 @@ dotenv.config();
       folder
     );
   }
+};
+
+export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
+  console.log(`Event: ${JSON.stringify(event, null, 2)}`);
+  console.log(`Context: ${JSON.stringify(context, null, 2)}`);
+
+  await generateSheetInGoogleDrive();
+
+  return {
+      statusCode: 200,
+      body: JSON.stringify({
+          status: 'ok',
+      }),
+   };
+};
+
+(async () => {
+  await generateSheetInGoogleDrive()
 })();

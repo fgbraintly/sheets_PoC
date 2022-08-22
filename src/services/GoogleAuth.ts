@@ -5,7 +5,7 @@ import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
 class GoogleAuthentication {
   private auth: GoogleAuth<JSONClient> | null = null;
   private static authParams: GoogleAuthOptions<JSONClient> = {
-    keyFile: "./src/json/credentials.json",
+    keyFile: "./credentials.json",
     scopes: [
       "https://www.googleapis.com/auth/spreadsheets",
       "https://www.googleapis.com/auth/drive",

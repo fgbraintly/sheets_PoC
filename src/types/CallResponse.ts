@@ -1,4 +1,4 @@
-type CallResponse = {
+export type CallResponse = {
   id: number;
   date: Date;
   duration: number;

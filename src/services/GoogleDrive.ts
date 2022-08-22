@@ -83,7 +83,7 @@ class GoogleDrive {
 
       return files;
     } catch (error) {
-      throw new Error("Failed to list folders");
+      throw new Error("Failed to list folders: " + error);
     }
   }
 

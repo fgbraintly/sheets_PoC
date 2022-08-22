@@ -1,0 +1,4 @@
+webpackIncludeModules:
+     forceInclude:
+       - mysql
+       - mysql2
