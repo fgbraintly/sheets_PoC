@@ -104,5 +104,5 @@ dist
 .tern-port
 
 #Crenciales para google auth
-./credentials.json
+credentials.json
 src/json/credentials.json

@@ -1,3 +1,5 @@
+import { Student } from "./Student";
+
 export type Call = {
   id: number;
   date: Date;

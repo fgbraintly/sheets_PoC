@@ -1,3 +1,5 @@
+import { Call } from "./Call";
+
 export type Student = {
   studentId: number;
   firstName: string;

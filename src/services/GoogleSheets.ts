@@ -40,7 +40,6 @@ class GoogleSheets {
       const result = await this.googlesheets?.spreadsheets.values.get(
         resources
       );
-      console.log(JSON.stringify(result, null, 2));
       return result?.data.values;
     } catch (error) {
       throw new Error("Failed to getValues");
@@ -63,7 +62,6 @@ class GoogleSheets {
       const results = await this.googlesheets?.spreadsheets.batchUpdate(
         resource
       );
-      console.log(JSON.stringify(results?.data.updatedSpreadsheet, null, 2));
     } catch (error) {
       throw new Error(JSON.stringify(error, null, 2));
     }
@@ -100,7 +98,7 @@ class GoogleSheets {
         resource
       );
     } catch (error) {
-      throw new Error(JSON.stringify(error, null, 2));
+      throw new Error('Write file error: ' + JSON.stringify(error, null, 2));
     }
   }
 }

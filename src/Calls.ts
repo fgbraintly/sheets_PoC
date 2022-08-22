@@ -3,9 +3,9 @@ import { sheets_v4 } from "googleapis";
 import moment from "moment";
 import GoogleSheets from "./services/GoogleSheets";
 import GoogleDrive from "./services/GoogleDrive";
-import {CallResponse} from "./types/CallResponse";
-import {Student} from "./types/Student";
-import {Call} from "./types/Call";
+import { CallResponse } from "./types/CallResponse";
+import { Student } from "./types/Student";
+import { Call } from "./types/Call";
 
 class Calls {
   private sequelizeService;
@@ -38,15 +38,15 @@ class Calls {
     let callsDividedByWeeks: Array<Array<CallResponse>> = [];
 
     for (let i = 0; i < totalWeeks; i++) {
-      callsDividedByWeeks.push(
-        await this.sequelizeService.queryCalls(
-          _code,
-          fpc
-            .add(i == 0 ? 0 : 1, "w")
-            .format("YYYY-MM-DD")
-            .toString()
-        )
+      let calls = await this.sequelizeService.queryCalls(
+        _code,
+        fpc
+          .add(i == 0 ? 0 : 1, "w")
+          .format("YYYY-MM-DD")
+          .toString()
       );
+
+      callsDividedByWeeks.push(calls);
     }
 
     let studentsByWeeks: Array<Array<Student>> = [];
@@ -115,6 +115,7 @@ class Calls {
         info.push(studentInfo);
       }
     }
+
     return info;
   }
 
@@ -171,7 +172,8 @@ class Calls {
   ) {
     let callsByWeek = await this.getCalls(_code);
     let toPrint = this.formatTotalSessions(callsByWeek);
-
+    console.log(callsByWeek);
+    
     let values: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate = {
       spreadsheetId: spreeadSheetId,
       requestBody: {
@@ -200,18 +202,19 @@ class Calls {
     _code: string,
     spreadsheetId: string,
     callsByWeek: Student[][],
-    alreadyExist: boolean = false
+    alreadyExist?: boolean
   ) {
-    let count = 1;
+    let weekCounter = 1;
     let data: sheets_v4.Schema$ValueRange[] = new Array();
     let addSheets: sheets_v4.Schema$Request[] = new Array();
+    let lastPageWeek = <number>await this.sheetService.getLastSheet(spreadsheetId);
     for (const week of callsByWeek) {
       if (week.length >= 1) {
-        if (alreadyExist === false) {
+        if (!alreadyExist || weekCounter >= lastPageWeek) {
           addSheets.push({
             addSheet: {
               properties: {
-                title: `Week ${count}`,
+                title: `Week ${weekCounter}`,
                 hidden: false,
               },
             },
@@ -221,13 +224,14 @@ class Calls {
           values: [
             ...week.map((student) => this.formatValuesAllcalls(student).flat()),
           ],
-          range: `Week ${count}!A1:BZ${week.length + 1}`,
+          range: `Week ${weekCounter}`,
           majorDimension: "ROWS",
         });
-        count++;
+        weekCounter++;
       }
     }
-    if (alreadyExist === false) {
+
+    if (addSheets.length >= 1) {      
       const addSheetResource: sheets_v4.Params$Resource$Spreadsheets$Batchupdate =
         {
           spreadsheetId: spreadsheetId,
