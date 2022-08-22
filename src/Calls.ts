@@ -3,6 +3,10 @@ import { sheets_v4 } from "googleapis";
 import moment from "moment";
 import GoogleSheets from "./services/GoogleSheets";
 import GoogleDrive from "./services/GoogleDrive";
+import {CallResponse} from "./types/CallResponse";
+import {Student} from "./types/Student";
+import {Call} from "./types/Call";
+
 class Calls {
   private sequelizeService;
   private sheetService;
@@ -31,7 +35,7 @@ class Calls {
   async getCalls(_code: string) {
     let { totalWeeks, fpc } = await this.getWeeks(_code);
 
-    let callsDividedByWeeks: Array<Array<CallResponse>> = new Array();
+    let callsDividedByWeeks: Array<Array<CallResponse>> = [];
 
     for (let i = 0; i < totalWeeks; i++) {
       callsDividedByWeeks.push(
@@ -45,10 +49,10 @@ class Calls {
       );
     }
 
-    let studentsByWeeks: Array<Array<Student>> = new Array();
+    let studentsByWeeks: Array<Array<Student>> = [];
     for (let i = 0; i < callsDividedByWeeks.length; i++) {
       if (callsDividedByWeeks[i].length === 0) {
-        studentsByWeeks[i] = new Array();
+        studentsByWeeks[i] = [];
       }
       for (let call of callsDividedByWeeks[i]) {
         let studentAux: Student = {
@@ -58,10 +62,10 @@ class Calls {
         };
 
         if (studentsByWeeks?.[i] === undefined) {
-          studentsByWeeks[i] = new Array();
+          studentsByWeeks[i] = [];
         }
         if (studentsByWeeks[i].length === 0) {
-          studentsByWeeks[i] = new Array();
+          studentsByWeeks[i] = [];
           studentsByWeeks[i].push(studentAux);
         }
         let studentIndex = studentsByWeeks[i]!.findIndex(
@@ -70,14 +74,14 @@ class Calls {
 
         if (studentIndex !== -1) {
           if (studentsByWeeks[i][studentIndex].calls === undefined) {
-            studentsByWeeks[i][studentIndex].calls = new Array();
+            studentsByWeeks[i][studentIndex].calls = [];
           }
           studentsByWeeks[i][studentIndex].calls?.push(this.formatCall(call));
           studentsByWeeks[i][studentIndex].totalTimeSpoken ??= 0;
           studentsByWeeks[i][studentIndex].totalTimeSpoken! += call.duration;
         } else {
           if (studentAux.calls === undefined) {
-            studentAux.calls = new Array();
+            studentAux.calls = [];
           }
           studentAux.calls?.push(this.formatCall(call));
           studentAux.totalTimeSpoken = call.duration;

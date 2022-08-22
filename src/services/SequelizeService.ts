@@ -1,5 +1,8 @@
 import { QueryTypes, Sequelize } from "sequelize";
 import { Options } from "sequelize/types";
+import mysql2 from 'mysql2';
+import {CallResponse} from "../types/CallResponse";
+import {Institution} from "../types/Institution";
 
 class SequelizeService {
   private sequelize: Sequelize;
@@ -10,7 +13,9 @@ class SequelizeService {
       password: process.env.MYSQL_PASSWORD,
       host: process.env.MYSQL_HOST,
       dialect: "mysql",
+      dialectModule: mysql2 
     };
+    console.log("IP de Env es:", process.env.MYSQL_HOST);
     this.sequelize = new Sequelize(options);
   }
 
@@ -47,7 +52,7 @@ class SequelizeService {
 
   async queryCodes():Promise<Array<Institution>>  {
     return await this.sequelize.query(
-      "SELECT promotional_codes.title, promotional_codes.enabled,promotional_codes.code,promotional_codes.created_at,promotional_codes.temary,promotional_codes.generate_report,institutions.name FROM t2t.promotional_codes left join institutions on institutions.id = promotional_codes.institution_id where promotional_codes.generate_report = 1",
+      "SELECT promotional_codes.title, promotional_codes.enabled,promotional_codes.code,promotional_codes.created_at,promotional_codes.temary,promotional_codes.generate_report,institutions.name FROM promotional_codes left join institutions on institutions.id = promotional_codes.institution_id where promotional_codes.generate_report = 1",
       { type: QueryTypes.SELECT, raw: true }
     );
   }

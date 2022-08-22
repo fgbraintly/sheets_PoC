@@ -1,4 +1,4 @@
-type Institution ={
+export type Institution ={
     title:string
     enabled:number
     created_at:Date

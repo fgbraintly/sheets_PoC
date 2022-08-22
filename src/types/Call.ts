@@ -1,4 +1,4 @@
-type Call = {
+export type Call = {
   id: number;
   date: Date;
   duration: number;

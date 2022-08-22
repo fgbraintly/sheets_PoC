@@ -1,4 +1,4 @@
-type Student = {
+export type Student = {
   studentId: number;
   firstName: string;
   lastName: string;
