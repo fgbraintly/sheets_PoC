@@ -172,7 +172,6 @@ class Calls {
   ) {
     let callsByWeek = await this.getCalls(_code);
     let toPrint = this.formatTotalSessions(callsByWeek);
-    console.log(callsByWeek);
     
     let values: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate = {
       spreadsheetId: spreeadSheetId,

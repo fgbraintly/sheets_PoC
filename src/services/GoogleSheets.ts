@@ -73,7 +73,6 @@ class GoogleSheets {
         resource
       );
       return response?.data.updatedSpreadsheet?.sheets;
-      // console.log(JSON.stringify(results?.data.updatedSpreadsheet, null, 2));
     } catch (error) {
       throw new Error(JSON.stringify(error, null, 2));
     }

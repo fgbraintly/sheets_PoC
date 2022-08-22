@@ -19,9 +19,9 @@ class GoogleDrive {
         addParents: folderId,
         fields: "id,parents",
       });
-      console.log(JSON.stringify(response, null, 2));
     } catch (error) {
-      console.log(error);
+      throw new Error("MoveFileToFolder: " + JSON.stringify(error,null,2));
+      
     }
   }
 

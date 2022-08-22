@@ -15,7 +15,6 @@ class SequelizeService {
       dialect: "mysql",
       dialectModule: mysql2 
     };
-    console.log("IP de Env es:", process.env.MYSQL_HOST);
     this.sequelize = new Sequelize(options);
   }
 
