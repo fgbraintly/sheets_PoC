@@ -3,17 +3,28 @@ import * as dotenv from "dotenv";
 import GoogleDrive from "./services/GoogleDrive";
 import GoogleSheets from "./services/GoogleSheets";
 import SequelizeService from "./services/SequelizeService";
-import { file } from "googleapis/build/src/apis/file";
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
+import { Institution } from "./types/Institution";
+import { drive_v3 } from "googleapis";
 
 dotenv.config();
 const sequelizeService = new SequelizeService();
 
+const deleteFiles = async () => {
+  const drive = new GoogleDrive();
+
+  const folders = <drive_v3.Schema$File[]>await drive.listFolders();
+  for (const folder of folders) {
+    await drive.deleteFolders(folder);
+  }
+};
 const generateSheetInGoogleDrive = async () => {
+  // await deleteFiles();
   const callService = new Calls();
   const drive = new GoogleDrive();
   const sheets = new GoogleSheets();
   const institutions = await sequelizeService.queryCodes();
+  let alreadySharedFolders: string[] = [];
   for (const institution of institutions) {
     //Si existe la capeta
     if (institution.name) {
@@ -47,24 +58,18 @@ const generateSheetInGoogleDrive = async () => {
           );
         }
       }
-      // Comparto la carpeta
-      await drive.shareFiles(
-        "user",
-        "franco.garancini@braintly.com",
-        "reader",
-        folder
-      );
-    } else {
-      //Si no pertenece a una institucion
-      const sheetID = await sheets.createFile(institution.code);
-      await callService.generateReport(institution.code, sheetID, false);
-      //Comparte solamente el archivo
-      await drive.shareFiles(
-        "user",
-        "franco.garancini@braintly.com",
-        "reader",
-        sheetID
-      );
+      // Varios codigos pueden pertener a la misma institucion
+      // Para evitar el envio repetido de mails se agrega esta comprobacion
+      if (!alreadySharedFolders.includes(institution.name)) {
+        // Comparto la carpeta
+        await drive.shareFiles(
+          "user",
+          "franco.garancini@braintly.com",
+          "reader",
+          folder
+        );
+      }
+      alreadySharedFolders.push(institution.name);
     }
   }
 };
@@ -86,3 +91,6 @@ export const handler = async (
   };
 };
 
+// (async () => {
+//   await generateSheetInGoogleDrive();
+// })();

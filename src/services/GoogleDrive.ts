@@ -1,6 +1,7 @@
 import { drive_v3, google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
 import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
+import { RequestError } from "google-auth-library/build/src/transporters";
 import GoogleAuthentication from "./GoogleAuth";
 import { file } from "googleapis/build/src/apis/file";
 
@@ -20,8 +21,7 @@ class GoogleDrive {
         fields: "id,parents",
       });
     } catch (error) {
-      throw new Error("MoveFileToFolder: " + JSON.stringify(error,null,2));
-      
+      throw new Error("MoveFileToFolder: " + JSON.stringify(error, null, 2));
     }
   }
 
@@ -64,7 +64,7 @@ class GoogleDrive {
 
   async listFiles() {
     const params: drive_v3.Params$Resource$Files$List = {
-      pageSize: 10,
+      pageSize: 50,
       fields: "nextPageToken, files(id, name)",
     };
     const response = await this.drive?.files.list(params);
@@ -87,6 +87,11 @@ class GoogleDrive {
     }
   }
 
+  /**
+   * Searches folders by institution name
+   * @param institutionName
+   * @returns
+   */
   async searchFolder(institutionName: string) {
     const folders = await this.listFolders();
 
@@ -96,13 +101,28 @@ class GoogleDrive {
   }
 
   async getFileByCode(_code: string) {
-    const params: drive_v3.Params$Resource$Files$List = {
-      q: `name = '${_code}'`,
-      fields:'files(id,name,parents)'
-    };
-    const response = await this.drive.files.list(params);
-    const files = <drive_v3.Schema$File[]>response.data.files;
-    return files[0];
+    try {
+      const params: drive_v3.Params$Resource$Files$List = {
+        q: `name = '${_code}'`,
+        fields: "files(id,name,parents)",
+      };
+      const response = await this.drive.files.list(params);
+      const files = <drive_v3.Schema$File[]>response.data.files;
+      return files[0];
+    } catch (error) {
+      throw new Error("GetFileByCode: " + error);
+    }
+  }
+
+  async deleteFolders(folder: drive_v3.Schema$File) {
+    try {
+      const params: drive_v3.Params$Resource$Files$Delete = {
+        fileId: <string>folder.id,
+      };
+      await this.drive?.files.delete(params);
+    } catch (error) {
+      throw new Error("Failed to delete folders: " + error);
+    }
   }
 }
 

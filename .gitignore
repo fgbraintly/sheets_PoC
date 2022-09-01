@@ -106,3 +106,6 @@ dist
 #Crenciales para google auth
 credentials.json
 src/json/credentials.json
+
+build/
+dist/

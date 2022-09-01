@@ -17,7 +17,11 @@ class Calls {
     this.sheetService = new GoogleSheets();
     this.driveService = new GoogleDrive();
   }
-
+  /**
+   * This function returns an total of weeks between the first call and the last call
+   * @param _code
+   * @returns
+   */
   async getWeeks(_code: string) {
     const { first, last } = await this.sequelizeService.getProgramDateCall(
       _code
@@ -31,7 +35,13 @@ class Calls {
     let totalWeeks = Math.ceil(diff.asWeeks());
     return { totalWeeks, fpc, lpc };
   }
-
+  /**
+   * Get calls divided by weeks using getWeeks()
+   * Eliminate all the weeks without calls
+   * Format all de calls from diferent weeks into Student[]
+   * @param _code promotional code
+   * @returns
+   */
   async getCalls(_code: string) {
     let { totalWeeks, fpc } = await this.getWeeks(_code);
 
@@ -59,6 +69,7 @@ class Calls {
           studentId: call.student_id,
           firstName: call.student_name,
           lastName: call.student_last_name,
+          totalTimeSpoken: 0,
         };
 
         if (studentsByWeeks?.[i] === undefined) {
@@ -77,14 +88,15 @@ class Calls {
             studentsByWeeks[i][studentIndex].calls = [];
           }
           studentsByWeeks[i][studentIndex].calls?.push(this.formatCall(call));
-          studentsByWeeks[i][studentIndex].totalTimeSpoken ??= 0;
-          studentsByWeeks[i][studentIndex].totalTimeSpoken! += call.duration;
+          studentsByWeeks[i][studentIndex].totalTimeSpoken =
+            studentsByWeeks[i][studentIndex].totalTimeSpoken + call.duration;
         } else {
           if (studentAux.calls === undefined) {
             studentAux.calls = [];
           }
           studentAux.calls?.push(this.formatCall(call));
-          studentAux.totalTimeSpoken = call.duration;
+          studentAux.totalTimeSpoken =
+            studentAux.totalTimeSpoken + call.duration;
           studentsByWeeks[i].push(studentAux);
         }
       }
@@ -156,6 +168,7 @@ class Calls {
       student.firstName,
       student.lastName,
       this.formatDuration(<number>student.totalTimeSpoken),
+      student.calls?.length,
       student.calls?.flatMap((call) => [
         `${call.coach?.coachFirstName} ${call.coach?.coachLastName} (${call.coach?.coachNationality})`,
         this.formatDate(call.date),
@@ -165,6 +178,25 @@ class Calls {
     ];
   }
 
+  dayFormat(i: number): string {
+    let n;
+    switch (i + 1) {
+      case 1:
+        n = "st";
+        break;
+      case 2:
+        n = "nd";
+        break;
+      case 3:
+        n = "rd";
+        break;
+      default:
+        n = "th";
+        break;
+    }
+    return n;
+  }
+
   async generateReport(
     _code: string,
     spreeadSheetId: string,
@@ -172,14 +204,32 @@ class Calls {
   ) {
     let callsByWeek = await this.getCalls(_code);
     let toPrint = this.formatTotalSessions(callsByWeek);
-    
+    let header = [
+      "First Name",
+      "Last Name",
+      "Total Calls",
+      "Total Time Spoken",
+    ];
+
+    const lengths = toPrint.map((student) => student?.length);
+    let largest = Math.max(...lengths);
+
+    for (let i = 0; i < largest - 1; i++) {
+      let n = this.dayFormat(i);
+      header.push(`Date of ${i + 1}${n} Call`, `Duration of ${i + 1}${n} Call`);
+    }
+
+    toPrint.unshift(header);
+
+    console.log({ lista: toPrint });
+
     let values: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate = {
       spreadsheetId: spreeadSheetId,
       requestBody: {
         valueInputOption: "USER_ENTERED",
         data: [
           {
-            range: "Sheet1!A1:Z" + toPrint.length + 1,
+            range: "Sheet1!A1:BZ" + toPrint.length + 1,
             majorDimension: "ROWS",
             values: [...toPrint.map((students) => students)],
           },
@@ -206,9 +256,17 @@ class Calls {
     let weekCounter = 1;
     let data: sheets_v4.Schema$ValueRange[] = new Array();
     let addSheets: sheets_v4.Schema$Request[] = new Array();
-    let lastPageWeek = <number>await this.sheetService.getLastSheet(spreadsheetId);
+    let lastPageWeek = <number>(
+      await this.sheetService.getLastSheet(spreadsheetId)
+    );
     for (const week of callsByWeek) {
       if (week.length >= 1) {
+        let header: any[] = [
+          "First Name",
+          "Last Name",
+          "Total Time Spoken",
+          "Total Calls",
+        ];
         if (!alreadyExist || weekCounter >= lastPageWeek) {
           addSheets.push({
             addSheet: {
@@ -219,8 +277,18 @@ class Calls {
             },
           });
         }
+        week.map((student) => {
+          let amountOfCalls = <number>student.calls?.length;
+          if (amountOfCalls) {
+            for (let i = 0; i < amountOfCalls; i++) {
+              header.push("Coach", "Date", "Duration", "Recordings");
+            }
+          }
+        });
+
         data.push({
           values: [
+            header,
             ...week.map((student) => this.formatValuesAllcalls(student).flat()),
           ],
           range: `Week ${weekCounter}`,
@@ -230,7 +298,7 @@ class Calls {
       }
     }
 
-    if (addSheets.length >= 1) {      
+    if (addSheets.length >= 1) {
       const addSheetResource: sheets_v4.Params$Resource$Spreadsheets$Batchupdate =
         {
           spreadsheetId: spreadsheetId,

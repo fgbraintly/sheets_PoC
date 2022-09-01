@@ -4,6 +4,6 @@ export type Student = {
   studentId: number;
   firstName: string;
   lastName: string;
-  totalTimeSpoken?:number | 0;
+  totalTimeSpoken:number;
   calls?: Call[];
 };
