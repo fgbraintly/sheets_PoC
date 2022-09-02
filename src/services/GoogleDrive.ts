@@ -20,8 +20,8 @@ class GoogleDrive {
         addParents: folderId,
         fields: "id,parents",
       });
-    } catch (error) {
-      throw new Error("MoveFileToFolder: " + JSON.stringify(error, null, 2));
+    } catch (error: any) {
+      throw new Error("Failed to moveFilesToFolder: " + error.message);
     }
   }
 
@@ -37,8 +37,8 @@ class GoogleDrive {
     try {
       const file = await this.drive?.files.create(params);
       return <string>file?.data.id;
-    } catch (error) {
-      throw new Error("Failed to create folder");
+    } catch (error: any) {
+      throw new Error("Failed to create folder: " + error.message);
     }
   }
 
@@ -52,25 +52,31 @@ class GoogleDrive {
       requestBody: { type: type, role: role, emailAddress: emailAddress },
       fileId: fileId,
       fields: "id",
+      sendNotificationEmail:false,
+      
     };
     try {
       const response = await this.drive?.permissions.create(params);
       const fileId = <string>response?.data.id;
       return fileId;
-    } catch (err) {
-      throw new Error("Failed to share file");
+    } catch (err: any) {
+      throw new Error("Failed to share file" + err.message);
     }
   }
 
   async listFiles() {
-    const params: drive_v3.Params$Resource$Files$List = {
-      pageSize: 50,
-      fields: "nextPageToken, files(id, name)",
-    };
-    const response = await this.drive?.files.list(params);
-    const files = response?.data.files;
+    try {
+      const params: drive_v3.Params$Resource$Files$List = {
+        pageSize: 50,
+        fields: "nextPageToken, files(id, name)",
+      };
+      const response = await this.drive?.files.list(params);
+      const files = response?.data.files;
 
-    return files;
+      return files;
+    } catch (error: any) {
+      throw new Error("List files: " + error.message);
+    }
   }
 
   async listFolders() {
@@ -82,8 +88,8 @@ class GoogleDrive {
       const files = response?.data.files;
 
       return files;
-    } catch (error) {
-      throw new Error("Failed to list folders: " + error);
+    } catch (error: any) {
+      throw new Error("Failed to list folders: " + error.message);
     }
   }
 
@@ -109,19 +115,19 @@ class GoogleDrive {
       const response = await this.drive.files.list(params);
       const files = <drive_v3.Schema$File[]>response.data.files;
       return files[0];
-    } catch (error) {
-      throw new Error("GetFileByCode: " + error);
+    } catch (error: any) {
+      throw new Error("GetFileByCode: " + error.message);
     }
   }
 
-  async deleteFolders(folder: drive_v3.Schema$File) {
+  async deleteFolder(folder: drive_v3.Schema$File) {
     try {
       const params: drive_v3.Params$Resource$Files$Delete = {
         fileId: <string>folder.id,
       };
       await this.drive?.files.delete(params);
-    } catch (error) {
-      throw new Error("Failed to delete folders: " + error);
+    } catch (error: any) {
+      throw new Error("Failed to delete folders: " + error.message);
     }
   }
 }

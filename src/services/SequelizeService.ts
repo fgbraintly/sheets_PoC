@@ -13,7 +13,8 @@ class SequelizeService {
       password: process.env.MYSQL_PASSWORD,
       host: process.env.MYSQL_HOST,
       dialect: "mysql",
-      dialectModule: mysql2 
+      dialectModule: mysql2,
+      logging:false
     };
     this.sequelize = new Sequelize(options);
   }

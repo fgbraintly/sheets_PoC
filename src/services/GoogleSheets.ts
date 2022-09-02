@@ -2,7 +2,7 @@ import { google, sheets_v4 } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
 import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
 import GoogleAuthentication from "./GoogleAuth";
-import { GaxiosResponse } from "googleapis-common";
+import { GaxiosResponse,RetryConfig } from "googleapis-common";
 
 class GoogleSheets {
   private auth: GoogleAuth<JSONClient> | null = null;
@@ -62,8 +62,8 @@ class GoogleSheets {
       const results = await this.googlesheets?.spreadsheets.batchUpdate(
         resource
       );
-    } catch (error) {
-      throw new Error(JSON.stringify(error, null, 2));
+    } catch (error:any) {
+      throw new Error('Update file error: ' + <string>error?.message);
     }
   }
 
@@ -73,8 +73,8 @@ class GoogleSheets {
         resource
       );
       return response?.data.updatedSpreadsheet?.sheets;
-    } catch (error) {
-      throw new Error(JSON.stringify(error, null, 2));
+    } catch (error:any) {
+      throw new Error('Add sheet error: ' + <string>error?.message);
     }
   }
 
@@ -93,11 +93,15 @@ class GoogleSheets {
     resource: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate
   ) {
     try {
+      const retryConfig : RetryConfig = {
+        retryDelay: 31000,
+      }
       const result = await this.googlesheets?.spreadsheets.values.batchUpdate(
-        resource
+        resource,{retryConfig:retryConfig}
       );
-    } catch (error) {
-      throw new Error('Write file error: ' + JSON.stringify(error, null, 2));
+      result?.config.retryConfig
+    } catch (error:any) {
+      throw new Error('Write file error: ' + error.message);
     }
   }
 }

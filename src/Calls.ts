@@ -100,6 +100,12 @@ class Calls {
           studentsByWeeks[i].push(studentAux);
         }
       }
+
+      for (let i = 0; i < studentsByWeeks.length; i++) {
+        studentsByWeeks[i].sort((a, b) => {
+          return a.firstName > b.firstName ? 1 : -1;
+        });
+      }
     }
     return studentsByWeeks;
   }
@@ -118,7 +124,8 @@ class Calls {
         });
 
         studentInfo = <string[]>[
-          student.firstName,
+          student.firstName.charAt(0).toUpperCase() +
+            student.firstName.slice(1),
           student.lastName,
           student.calls?.length,
           this.formatDuration(<number>student.totalTimeSpoken),
@@ -165,7 +172,7 @@ class Calls {
 
   private formatValuesAllcalls(student: Student) {
     return [
-      student.firstName,
+      student.firstName.charAt(0).toUpperCase() + student.firstName.slice(1),
       student.lastName,
       this.formatDuration(<number>student.totalTimeSpoken),
       student.calls?.length,
@@ -221,10 +228,9 @@ class Calls {
 
     toPrint.unshift(header);
 
-    console.log({ lista: toPrint });
-
     let values: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate = {
       spreadsheetId: spreeadSheetId,
+
       requestBody: {
         valueInputOption: "USER_ENTERED",
         data: [
@@ -286,6 +292,9 @@ class Calls {
           }
         });
 
+        week.sort((a, b) => {
+          return a.firstName > b.firstName ? 1 : -1;
+        });
         data.push({
           values: [
             header,
