@@ -25,7 +25,6 @@ const generateSheetInGoogleDrive = async () => {
   const sheets = new GoogleSheets();
   const sequelizeService = new SequelizeService();
   const institutions = await sequelizeService.queryCodes();
-  let alreadySharedFolders: string[] = [];
   for (const institution of institutions) {
     //Si existe la institucion
 
@@ -95,5 +94,4 @@ export const handler = async (
 // (async () => {
 //   await deleteFiles();
 //   await generateSheetInGoogleDrive();
-
 // })();

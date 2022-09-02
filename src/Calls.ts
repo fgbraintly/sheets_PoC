@@ -6,7 +6,7 @@ import GoogleDrive from "./services/GoogleDrive";
 import { CallResponse } from "./types/CallResponse";
 import { Student } from "./types/Student";
 import { Call } from "./types/Call";
-
+import _ from "lodash";
 class Calls {
   private sequelizeService;
   private sheetService;
@@ -100,39 +100,64 @@ class Calls {
           studentsByWeeks[i].push(studentAux);
         }
       }
-
-      for (let i = 0; i < studentsByWeeks.length; i++) {
-        studentsByWeeks[i].sort((a, b) => {
-          return a.firstName > b.firstName ? 1 : -1;
-        });
-      }
     }
     return studentsByWeeks;
   }
+
+  removeStudents(arr: Student[][], value: number[]) {}
 
   formatTotalSessions(studentsByWeeks: Student[][]) {
     let info: Array<any[]> = new Array();
     let callsInfo: any[] = new Array();
     let studentInfo: string[] = new Array();
-    for (let i = 0; i < studentsByWeeks.length; i++) {
-      for (const student of studentsByWeeks[i]) {
-        callsInfo = <string[][]>student.calls?.map((call) => {
-          return [
-            this.formatDate(call.date),
-            this.formatDuration(call.duration),
-          ];
-        });
+    let groupArr: any;
 
-        studentInfo = <string[]>[
-          student.firstName.charAt(0).toUpperCase() +
-            student.firstName.slice(1),
-          student.lastName,
-          student.calls?.length,
-          this.formatDuration(<number>student.totalTimeSpoken),
-          ...callsInfo.flatMap((call) => call),
-        ];
-        info.push(studentInfo);
+    const flattedStudents = [...studentsByWeeks.flatMap((week) => week)];
+
+    const groupedStudentsByWeek = _.groupBy(
+      flattedStudents,
+      (s) => s.studentId
+    );
+
+    const studentsTotalSessions: Student[] = _.map(
+      groupedStudentsByWeek,
+      (studentList, studentId) => {
+        const callList: Call[] = studentList.flatMap(
+          (student) => student.calls!
+        );
+        const totalTimeSpoken = callList.reduce(
+          (acc, call) => acc + call.duration,
+          0
+        );
+        const firstStudent = studentList[0] as Student;
+
+        return {
+          studentId: +studentId,
+          firstName:
+            firstStudent.firstName.charAt(0).toUpperCase() +
+            firstStudent.firstName.slice(1),
+          lastName: firstStudent.lastName === 'lastName' ? " " : firstStudent.firstName,
+          totalTimeSpoken: totalTimeSpoken,
+          calls: callList,
+        };
       }
+    );
+    studentsTotalSessions.sort((a, b) => {
+      return a.firstName > b.firstName ? 1 : -1;
+    });
+    for (const student of studentsTotalSessions) {
+      callsInfo = <string[][]>student.calls?.map((call) => {
+        return [this.formatDate(call.date), this.formatDuration(call.duration)];
+      });
+
+      studentInfo = <string[]>[
+        student.firstName,
+        student.lastName,
+        student.calls?.length,
+        this.formatDuration(<number>student.totalTimeSpoken),
+        ...callsInfo.flatMap((call) => call),
+      ];
+      info.push(studentInfo);
     }
 
     return info;
@@ -146,7 +171,7 @@ class Calls {
       id: callResponse.id,
       coach: {
         coachFirstName: callResponse.coach_name,
-        coachLastName: callResponse.coach_last_name,
+        coachLastName: callResponse.coach_last_name === 'lastName' ? ' ' : callResponse.coach_last_name,
         coachNationality: callResponse.coach_nationality,
       },
     };
@@ -171,6 +196,9 @@ class Calls {
   }
 
   private formatValuesAllcalls(student: Student) {
+    if (student.lastName === 'lastName') {
+      student.lastName = ' ';
+    }
     return [
       student.firstName.charAt(0).toUpperCase() + student.firstName.slice(1),
       student.lastName,
@@ -210,6 +238,7 @@ class Calls {
     alreadyExist?: boolean
   ) {
     let callsByWeek = await this.getCalls(_code);
+
     let toPrint = this.formatTotalSessions(callsByWeek);
     let header = [
       "First Name",
@@ -235,7 +264,7 @@ class Calls {
         valueInputOption: "USER_ENTERED",
         data: [
           {
-            range: "Sheet1!A1:BZ" + toPrint.length + 1,
+            range: "Sheet1!A1:ZZ" + toPrint.length + 1,
             majorDimension: "ROWS",
             values: [...toPrint.map((students) => students)],
           },
@@ -286,7 +315,7 @@ class Calls {
         week.map((student) => {
           let amountOfCalls = <number>student.calls?.length;
           if (amountOfCalls) {
-            for (let i = 0; i < amountOfCalls; i++) {
+            for (let i = 0; i < amountOfCalls - 1; i++) {
               header.push("Coach", "Date", "Duration", "Recordings");
             }
           }
