@@ -84,8 +84,8 @@ class GoogleSheets {
         spreadsheetId: spreadsheetId,
       });
       return response?.data.sheets?.length;
-    } catch (error) {
-      throw new Error(JSON.stringify(error, null, 2));
+    } catch (error:any) {
+      throw new Error("Get last sheet" + error.message);
     }
   }
 
@@ -94,7 +94,8 @@ class GoogleSheets {
   ) {
     try {
       const retryConfig : RetryConfig = {
-        retryDelay: 31000,
+        retryDelay: 61000,
+        
       }
       const result = await this.googlesheets?.spreadsheets.values.batchUpdate(
         resource,{retryConfig:retryConfig}

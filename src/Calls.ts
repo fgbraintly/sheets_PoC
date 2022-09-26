@@ -7,6 +7,7 @@ import { CallResponse } from "./types/CallResponse";
 import { Student } from "./types/Student";
 import { Call } from "./types/Call";
 import _ from "lodash";
+// import { writeFile } from "fs";
 class Calls {
   private sequelizeService;
   private sheetService;
@@ -136,16 +137,19 @@ class Calls {
           firstName:
             firstStudent.firstName.charAt(0).toUpperCase() +
             firstStudent.firstName.slice(1),
-          lastName: firstStudent.lastName === 'lastName' ? " " : firstStudent.firstName,
+          lastName:
+            firstStudent.lastName === "lastName" ? " " : firstStudent.lastName,
           totalTimeSpoken: totalTimeSpoken,
           calls: callList,
         };
       }
     );
-    studentsTotalSessions.sort((a, b) => {
-      return a.firstName > b.firstName ? 1 : -1;
-    });
-    for (const student of studentsTotalSessions) {
+    const studentsTotalSessionsOrdered = _.sortBy(studentsTotalSessions, [
+      "lastName",
+      "firstName",
+    ]);
+
+    for (const student of studentsTotalSessionsOrdered) {
       callsInfo = <string[][]>student.calls?.map((call) => {
         return [this.formatDate(call.date), this.formatDuration(call.duration)];
       });
@@ -171,7 +175,10 @@ class Calls {
       id: callResponse.id,
       coach: {
         coachFirstName: callResponse.coach_name,
-        coachLastName: callResponse.coach_last_name === 'lastName' ? ' ' : callResponse.coach_last_name,
+        coachLastName:
+          callResponse.coach_last_name === "lastName"
+            ? " "
+            : callResponse.coach_last_name,
         coachNationality: callResponse.coach_nationality,
       },
     };
@@ -188,27 +195,27 @@ class Calls {
     let [dd, mm, yyyy] = [
       date.getDate(),
       date.getMonth() + 1,
-      date.getFullYear(),
+      date.getFullYear().toString().slice(2),
     ];
     let day = dd < 10 ? "0" + dd : dd;
     let month = mm < 10 ? "0" + mm : mm;
-    return `${day}/${month}/${yyyy}`;
+    return `${month}/${day}/${yyyy}`;
   }
 
   private formatValuesAllcalls(student: Student) {
-    if (student.lastName === 'lastName') {
-      student.lastName = ' ';
+    if (student.lastName === "lastName") {
+      student.lastName = " ";
     }
     return [
       student.firstName.charAt(0).toUpperCase() + student.firstName.slice(1),
       student.lastName,
-      this.formatDuration(<number>student.totalTimeSpoken),
       student.calls?.length,
+      this.formatDuration(<number>student.totalTimeSpoken),
       student.calls?.flatMap((call) => [
-        `${call.coach?.coachFirstName} ${call.coach?.coachLastName} (${call.coach?.coachNationality})`,
         this.formatDate(call.date),
+        `${call.coach?.coachFirstName} (${call.coach?.coachNationality})`,
+        `=HYPERLINK("${call.recordingUrl}","Click to listen")`,
         this.formatDuration(call.duration),
-        `=HYPERLINK("${call.recordingUrl}","RecordingUrl")`,
       ]),
     ];
   }
@@ -239,6 +246,19 @@ class Calls {
   ) {
     let callsByWeek = await this.getCalls(_code);
 
+  /**
+   * For Debug 
+   */
+  
+    // writeFile(
+    //   `logByweek_${_code}.txt`,
+    //   JSON.stringify(callsByWeek, null, 2),
+    //   (err) => {
+    //     console.log(err);
+    //   }
+    // );
+    
+    // return;
     let toPrint = this.formatTotalSessions(callsByWeek);
     let header = [
       "First Name",
@@ -299,8 +319,8 @@ class Calls {
         let header: any[] = [
           "First Name",
           "Last Name",
-          "Total Time Spoken",
           "Total Calls",
+          "Total Time Spoken",
         ];
         if (!alreadyExist || weekCounter >= lastPageWeek) {
           addSheets.push({
@@ -315,19 +335,19 @@ class Calls {
         week.map((student) => {
           let amountOfCalls = <number>student.calls?.length;
           if (amountOfCalls) {
-            for (let i = 0; i < amountOfCalls - 1; i++) {
-              header.push("Coach", "Date", "Duration", "Recordings");
+            for (let i = 0; i < amountOfCalls; i++) {
+              header.push("Date Time", "Coach", "Recording", "Duration");
             }
           }
         });
+        const weekOrdered = _.sortBy(week, ["lastName", "firstName"]);
 
-        week.sort((a, b) => {
-          return a.firstName > b.firstName ? 1 : -1;
-        });
         data.push({
           values: [
             header,
-            ...week.map((student) => this.formatValuesAllcalls(student).flat()),
+            ...weekOrdered.map((student) =>
+              this.formatValuesAllcalls(student).flat()
+            ),
           ],
           range: `Week ${weekCounter}`,
           majorDimension: "ROWS",

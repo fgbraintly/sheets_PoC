@@ -25,6 +25,7 @@ const generateSheetInGoogleDrive = async () => {
   const sheets = new GoogleSheets();
   const sequelizeService = new SequelizeService();
   const institutions = await sequelizeService.queryCodes();
+
   for (const institution of institutions) {
     //Si existe la institucion
 
@@ -67,7 +68,15 @@ const generateSheetInGoogleDrive = async () => {
             <string>file?.id,
             true
           );
+          await drive.moveFilesToFolder(<string>file?.id, folder);
+
         }
+        await drive.shareFiles(
+          "user",
+          "services@time2talk.app",
+          "reader",
+          folder
+        );
       }
     } // institution.name !== null
   }
