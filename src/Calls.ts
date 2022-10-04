@@ -1,18 +1,24 @@
 import SequelizeService from "./services/SequelizeService";
 import { sheets_v4 } from "googleapis";
-import moment from "moment";
+import moment, { Duration } from "moment";
 import GoogleSheets from "./services/GoogleSheets";
 import GoogleDrive from "./services/GoogleDrive";
 import { CallResponse } from "./types/CallResponse";
 import { Student } from "./types/Student";
 import { Call } from "./types/Call";
 import _ from "lodash";
-// import { writeFile } from "fs";
+import { writeFile } from "fs";
 class Calls {
   private sequelizeService;
   private sheetService;
   private driveService;
-
+  private totalTimeSpoken: Duration | undefined;
+  private header: string[] = [
+    "First Name",
+    "Last Name",
+    "Total Calls",
+    "Total Time Spoken",
+  ];
   constructor() {
     this.sequelizeService = new SequelizeService();
     this.sheetService = new GoogleSheets();
@@ -28,12 +34,19 @@ class Calls {
       _code
     );
 
-    const fpc = moment(first[0]?.date, "YYYY-MM-DD");
-    const lpc = moment(last[0]?.date, "YYYY-MM-DD");
+    const fpc = moment(first[0]?.date, "YYYY-MM-DD")
+      .startOf("week")
+      .add(1, "day")
+      .utcOffset("GMT-00:00");
+    const lpc = moment(last[0]?.date, "YYYY-MM-DD")
+      .endOf("week")
+      .add(1, "day")
+      .utcOffset("GMT-00:00");
 
     let diff = moment.duration(lpc.diff(fpc));
 
     let totalWeeks = Math.ceil(diff.asWeeks());
+
     return { totalWeeks, fpc, lpc };
   }
   /**
@@ -48,7 +61,7 @@ class Calls {
 
     let callsDividedByWeeks: Array<Array<CallResponse>> = [];
 
-    for (let i = 0; i < totalWeeks; i++) {
+    for (let i = 0; i < totalWeeks + 1; i++) {
       let calls = await this.sequelizeService.queryCalls(
         _code,
         fpc
@@ -148,11 +161,15 @@ class Calls {
       "lastName",
       "firstName",
     ]);
-
+    this.totalTimeSpoken = undefined;
     for (const student of studentsTotalSessionsOrdered) {
       callsInfo = <string[][]>student.calls?.map((call) => {
         return [this.formatDate(call.date), this.formatDuration(call.duration)];
       });
+
+      this.totalTimeSpoken = moment
+        .duration(this.totalTimeSpoken)
+        .add(this.formatDuration(student.totalTimeSpoken));
 
       studentInfo = <string[]>[
         student.firstName,
@@ -206,6 +223,7 @@ class Calls {
     if (student.lastName === "lastName") {
       student.lastName = " ";
     }
+
     return [
       student.firstName.charAt(0).toUpperCase() + student.firstName.slice(1),
       student.lastName,
@@ -244,60 +262,59 @@ class Calls {
     spreeadSheetId: string,
     alreadyExist?: boolean
   ) {
+    let durationDateHeader: string[] = [];
     let callsByWeek = await this.getCalls(_code);
 
-  /**
-   * For Debug 
-   */
-  
-    // writeFile(
-    //   `logByweek_${_code}.txt`,
-    //   JSON.stringify(callsByWeek, null, 2),
-    //   (err) => {
-    //     console.log(err);
-    //   }
-    // );
-    
-    // return;
     let toPrint = this.formatTotalSessions(callsByWeek);
-    let header = [
-      "First Name",
-      "Last Name",
-      "Total Calls",
-      "Total Time Spoken",
-    ];
 
-    const lengths = toPrint.map((student) => student?.length);
-    let largest = Math.max(...lengths);
+    let { condition, largest } = this.headersAmount(toPrint, this.header);
 
-    for (let i = 0; i < largest - 1; i++) {
-      let n = this.dayFormat(i);
-      header.push(`Date of ${i + 1}${n} Call`, `Duration of ${i + 1}${n} Call`);
+    const totalCallsCount = toPrint.reduce((acc, curr) => acc + curr[2], 0);
+
+    let formatedTotalTimeSpoken = this.formatTotalTimeOfCalls();
+
+    let formatingRule: sheets_v4.Schema$Request[] = new Array();
+    let colorIndex = 0;
+
+    for (let i = 0; i < condition; i++) {
+      durationDateHeader.push(
+        `Date of ${i + 1}${this.dayFormat(i)} Call`,
+        `Duration of ${i + 1}${this.dayFormat(i)} Call`
+      );
     }
 
-    toPrint.unshift(header);
+    toPrint.unshift(
+      [...this.header, ...durationDateHeader],
+      ["TOTAL", "", totalCallsCount, formatedTotalTimeSpoken],
+      ["", "", "", ""]
+    );
 
-    let values: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate = {
-      spreadsheetId: spreeadSheetId,
-
-      requestBody: {
-        valueInputOption: "USER_ENTERED",
-        data: [
-          {
-            range: "Sheet1!A1:ZZ" + toPrint.length + 1,
-            majorDimension: "ROWS",
-            values: [...toPrint.map((students) => students)],
+    for (let i = 4; i < largest - 1; i += 2) {
+      colorIndex = colorIndex == 0 ? 1 : 0;
+      formatingRule.push({
+        repeatCell: {
+          range: {
+            sheetId: 0,
+            startColumnIndex: i,
+            endColumnIndex: i + 2,
+            endRowIndex: 1,
           },
-        ],
-      },
-    };
-
-    await this.sheetService.writeFile(values);
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: this.headersColors()[colorIndex],
+            },
+          },
+          fields: "userEnteredFormat(backgroundColor)",
+        },
+      });
+    }
 
     await this.generateWeeklyReport(
       _code,
       spreeadSheetId,
       callsByWeek,
+      toPrint,
+      formatingRule,
       alreadyExist
     );
   }
@@ -306,11 +323,14 @@ class Calls {
     _code: string,
     spreadsheetId: string,
     callsByWeek: Student[][],
+    toPrint: any[][],
+    totalSessionFormatingRule: sheets_v4.Schema$Request[],
     alreadyExist?: boolean
   ) {
     let weekCounter = 1;
-    let data: sheets_v4.Schema$ValueRange[] = new Array();
+    let formatedCalls: sheets_v4.Schema$ValueRange[] = new Array();
     let addSheets: sheets_v4.Schema$Request[] = new Array();
+    let formatingRule: sheets_v4.Schema$Request[] = new Array();
     let lastPageWeek = <number>(
       await this.sheetService.getLastSheet(spreadsheetId)
     );
@@ -328,21 +348,23 @@ class Calls {
               properties: {
                 title: `Week ${weekCounter}`,
                 hidden: false,
+                sheetId: weekCounter,
               },
             },
           });
+          formatingRule.push(...this.formatingRuleOfWeeks(weekCounter));
         }
-        week.map((student) => {
-          let amountOfCalls = <number>student.calls?.length;
-          if (amountOfCalls) {
-            for (let i = 0; i < amountOfCalls; i++) {
-              header.push("Date Time", "Coach", "Recording", "Duration");
-            }
-          }
-        });
+        let amountOfCalls = week.map(
+          (student) => <number>student.calls?.length
+        );
+        let largestCalls = Math.max(...amountOfCalls);
+
+        for (let i = 0; i < largestCalls; i++) {
+          header.push("Date Time", "Coach", "Recording", "Duration");
+        }
         const weekOrdered = _.sortBy(week, ["lastName", "firstName"]);
 
-        data.push({
+        formatedCalls.push({
           values: [
             header,
             ...weekOrdered.map((student) =>
@@ -361,20 +383,243 @@ class Calls {
         {
           spreadsheetId: spreadsheetId,
           requestBody: {
-            requests: addSheets,
+            requests: [...addSheets, ...formatingRule],
           },
         };
       await this.sheetService.addSheet(addSheetResource);
     }
-    const writeFileResource: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate =
+
+    let writeFileResource: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate =
       {
         spreadsheetId: spreadsheetId,
         requestBody: {
           valueInputOption: "USER_ENTERED",
-          data,
+          data: [
+            {
+              range: "Sheet1!A1:ZZ" + toPrint.length + 1,
+              majorDimension: "ROWS",
+              values: [...toPrint.map((students) => students)],
+            },
+            ...formatedCalls,
+          ],
         },
       };
+
     await this.sheetService.writeFile(writeFileResource);
+    await this.sheetService.updateFile(
+      spreadsheetId,
+      totalSessionFormatingRule
+    );
+  }
+
+  formatTotalTimeOfCalls() {
+    return this.totalTimeSpoken
+      ?.toISOString()
+      .slice(2)
+      .split("")
+      .map((c) => {
+        switch (c) {
+          case "H":
+            return ":";
+          case "M":
+            return ":";
+          case "S":
+            return "";
+          default:
+            return c;
+        }
+      })
+      .join("");
+  }
+
+  addFormatOnTotalSesions() {
+    const request: sheets_v4.Schema$Request[] = [
+      {
+        repeatCell: {
+          range: {
+            sheetId: 0,
+            startRowIndex: 0,
+            endRowIndex: 2,
+          },
+          cell: {
+            userEnteredFormat: {
+              horizontalAlignment: "CENTER",
+              textFormat: {
+                fontSize: 12,
+                bold: true,
+              },
+            },
+          },
+          fields: "userEnteredFormat(textFormat,horizontalAlignment)",
+        },
+      },
+      {
+        repeatCell: {
+          range: {
+            sheetId: 0,
+            startColumnIndex: 0,
+            endColumnIndex: 4,
+            endRowIndex: 1,
+          },
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: {
+                blue: 1.0,
+                red: 0.5,
+                green: 0.7,
+                alpha: 1.0,
+              },
+            },
+          },
+          fields: "userEnteredFormat(backgroundColor)",
+        },
+      },
+      {
+        repeatCell: {
+          range: {
+            sheetId: 0,
+            startRowIndex: 1,
+            startColumnIndex: 3,
+          },
+          cell: {
+            userEnteredFormat: {
+              horizontalAlignment: "CENTER",
+            },
+          },
+          fields: "userEnteredFormat(horizontalAlignment)",
+        },
+      },
+      {
+        updateSheetProperties: {
+          properties: {
+            sheetId: 0,
+            gridProperties: {
+              frozenRowCount: 1,
+            },
+          },
+          fields: "gridProperties.frozenRowCount",
+        },
+      },
+      {
+        updateDimensionProperties: {
+          range: {
+            sheetId: 0,
+            dimension: "ROWS",
+            startIndex: 0,
+            endIndex: 0,
+          },
+          properties: {
+            pixelSize: 200,
+          },
+          fields: "pixelSize",
+        },
+      },
+      {
+        updateDimensionProperties: {
+          range: {
+            sheetId: 0,
+            dimension: "COLUMNS",
+            startIndex: 0,
+          },
+          properties: {
+            pixelSize: 150,
+          },
+          fields: "pixelSize",
+        },
+      },
+    ];
+    return request;
+  }
+
+  formatingRuleOfWeeks(sheet_id: number) {
+    const rule = [
+      {
+        repeatCell: {
+          range: {
+            sheetId: sheet_id,
+            startRowIndex: 0,
+            endRowIndex: 1,
+          },
+          cell: {
+            userEnteredFormat: {
+              horizontalAlignment: "CENTER",
+              textFormat: {
+                fontSize: 12,
+                bold: true,
+              },
+            },
+          },
+          fields: "userEnteredFormat(textFormat,horizontalAlignment)",
+        },
+      },
+      {
+        repeatCell: {
+          range: {
+            sheetId: sheet_id,
+            startRowIndex: 1,
+            startColumnIndex: 3,
+          },
+          cell: {
+            userEnteredFormat: {
+              horizontalAlignment: "CENTER",
+            },
+          },
+          fields: "userEnteredFormat(horizontalAlignment)",
+        },
+      },
+      {
+        updateDimensionProperties: {
+          range: {
+            sheetId: sheet_id,
+            dimension: "ROWS",
+            startIndex: 0,
+            endIndex: 0,
+          },
+          properties: {
+            pixelSize: 200,
+          },
+          fields: "pixelSize",
+        },
+      },
+      {
+        updateDimensionProperties: {
+          range: {
+            sheetId: sheet_id,
+            dimension: "COLUMNS",
+            startIndex: 0,
+          },
+          properties: {
+            pixelSize: 150,
+          },
+          fields: "pixelSize",
+        },
+      },
+    ];
+    return rule;
+  }
+
+  headersColors() {
+    return [
+      {
+        red: 80 / 255,
+        green: 227 / 255,
+        blue: 207 / 255,
+        alpha: 1.0,
+      },
+      {
+        red: 197 / 255,
+        green: 190 / 255,
+        blue: 234 / 255,
+        alpha: 1.0,
+      },
+    ];
+  }
+
+  headersAmount(toPrint: any[][], header: string[]) {
+    const lengths = toPrint.map((student) => student?.length);
+    let largest = Math.max(...lengths);
+    let condition = (largest - header.length) / 2;
+    return { condition, largest };
   }
 }
 

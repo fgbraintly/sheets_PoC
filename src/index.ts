@@ -5,6 +5,7 @@ import GoogleSheets from "./services/GoogleSheets";
 import SequelizeService from "./services/SequelizeService";
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
 import { drive_v3 } from "googleapis";
+import moment from "moment";
 
 dotenv.config();
 
@@ -28,13 +29,10 @@ const generateSheetInGoogleDrive = async () => {
 
   for (const institution of institutions) {
     //Si existe la institucion
-
     if (institution.name) {
       //Buscamos la carpeta
       let sheetID;
       let folder = await drive.searchFolder(institution.name);
-      // console.log(folder);
-
       //Si no existe la carpeta de esa institucion
       if (folder === undefined) {
         //Crea la carpeta
@@ -69,7 +67,6 @@ const generateSheetInGoogleDrive = async () => {
             true
           );
           await drive.moveFilesToFolder(<string>file?.id, folder);
-
         }
         await drive.shareFiles(
           "user",
@@ -78,7 +75,8 @@ const generateSheetInGoogleDrive = async () => {
           folder
         );
       }
-    } // institution.name !== null
+    }
+    // institution.name !== null
   }
 };
 
