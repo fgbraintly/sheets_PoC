@@ -89,7 +89,7 @@ class SequelizeService {
           code = '${_code}') AS lastCodeRedeem ON lastCodeRedeem.student_id = calls.student_id
           INNER JOIN
       countries ON countries.id = coaches.nationality
-      WHERE calls.duration >= 120 and (calls.created_at between '${_startDate}' and DATE_ADD('${_startDate}', INTERVAL 7 DAY)) order by calls.created_at`,
+      WHERE calls.duration >= 120 and calls.created_at >= lastCodeRedeem.max and (calls.created_at between '${_startDate}' and DATE_ADD('${_startDate}', INTERVAL 7 DAY)) order by calls.created_at`,
       { type: QueryTypes.SELECT, raw: true }
     );
   }

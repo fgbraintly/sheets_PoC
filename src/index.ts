@@ -5,7 +5,6 @@ import GoogleSheets from "./services/GoogleSheets";
 import SequelizeService from "./services/SequelizeService";
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
 import { drive_v3 } from "googleapis";
-import moment from "moment";
 
 dotenv.config();
 
