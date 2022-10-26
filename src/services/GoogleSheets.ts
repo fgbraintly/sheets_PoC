@@ -216,6 +216,47 @@ class GoogleSheets {
       throw new Error("Write file error: " + error.message);
     }
   }
+
+  // async updateExistitingFile(
+  //   spreadSheetId: string,
+  //   newValues: sheets_v4.Schema$CellData[]
+  // ) {
+  //   try {
+  //     const result = await this.googlesheets?.spreadsheets.batchUpdate({
+  //       spreadsheetId: spreadSheetId,
+  //       requestBody: {
+  //         requests: [
+  //           {
+  //             updateCells: {
+  //               range: {
+  //                 endColumnIndex: 1,
+  //                 startRowIndex: 0,
+  //               },
+  //               rows: [
+  //                 {
+  //                   values: newValues,
+  //                 },
+  //               ],
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     });
+  //     console.log(result);
+  //   } catch (error: any) {
+  //     console.log("Failed to update LinkBank" + error.message);
+  //   }
+  // }
+
+  async updateExistingValues(
+    spreadSheetId: string,
+    resource: sheets_v4.Schema$BatchUpdateValuesRequest
+  ) {
+    const result = await this.googlesheets?.spreadsheets.values.batchUpdate({
+      spreadsheetId: spreadSheetId,
+      requestBody: resource,
+    });
+  }
 }
 
 export default GoogleSheets;

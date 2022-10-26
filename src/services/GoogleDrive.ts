@@ -52,8 +52,7 @@ class GoogleDrive {
       requestBody: { type: type, role: role, emailAddress: emailAddress },
       fileId: fileId,
       fields: "id",
-      sendNotificationEmail:false,
-      
+      sendNotificationEmail: false,
     };
     try {
       const response = await this.drive?.permissions.create(params);
@@ -62,6 +61,38 @@ class GoogleDrive {
     } catch (err: any) {
       throw new Error("Failed to share file" + err.message);
     }
+  }
+  async shareFilesToMultipleEmails(
+    permissionArray: drive_v3.Schema$Permission[],
+    fileId: string,
+    sendNotification:boolean
+  ) {
+    try {
+      if (permissionArray?.length > 0) {
+        for (const permission of permissionArray) {
+          let params: drive_v3.Params$Resource$Permissions$Create | undefined =
+            {
+              requestBody: permission,
+              fileId: fileId,
+              fields: "id",
+              sendNotificationEmail: sendNotification,
+            };
+          const response = await this.drive?.permissions.create(params);
+        }
+      }
+    } catch (err: any) {
+      throw new Error("Failed to share file " + err.message);
+    }
+  }
+
+  async searchFile(fileName: string): Promise<string | boolean> {
+    const files = await this.listFiles();
+    for (const file of files!) {
+      if (file.name === fileName) {
+        return file.id as string;
+      }
+    }
+    return false;
   }
 
   async listFiles() {
@@ -82,9 +113,13 @@ class GoogleDrive {
   async listFolders() {
     const params: drive_v3.Params$Resource$Files$List = {
       q: "mimeType = 'application/vnd.google-apps.folder'",
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+
     };
     try {
       const response = await this.drive?.files.list(params);
+      
       const files = response?.data.files;
 
       return files;
@@ -111,9 +146,11 @@ class GoogleDrive {
       const params: drive_v3.Params$Resource$Files$List = {
         q: `name = '${_code}'`,
         fields: "files(id,name,parents)",
+        supportsAllDrives: true,
+        includeItemsFromAllDrives: true,
       };
       const response = await this.drive.files.list(params);
-      const files = <drive_v3.Schema$File[]>response.data.files;
+      const files = response.data.files as drive_v3.Schema$File[];
       return files[0];
     } catch (error: any) {
       throw new Error("GetFileByCode: " + error.message);
@@ -128,6 +165,15 @@ class GoogleDrive {
       await this.drive?.files.delete(params);
     } catch (error: any) {
       throw new Error("Failed to delete folders: " + error.message);
+    }
+  }
+
+  async listDrives() {
+    try {
+      const drives = await this.drive.drives.list({});
+      return drives;
+    } catch (error: any) {
+      throw new Error("Failed to fetch drives " + error.message);
     }
   }
 }

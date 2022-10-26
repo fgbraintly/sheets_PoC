@@ -35,7 +35,7 @@ class Calls {
     );
 
     const fpc = moment(first[0]?.date, "YYYY-MM-DD")
-      .startOf("week")
+      .subtract(1,"w")
       .add(1, "day")
       .utcOffset("GMT-00:00");
     const lpc = moment(last[0]?.date, "YYYY-MM-DD")
@@ -72,6 +72,12 @@ class Calls {
 
       callsDividedByWeeks.push(calls);
     }
+    
+    // writeFile(
+    //   `${_code}_log.txt`,
+    //   JSON.stringify(callsDividedByWeeks, null, 2),
+    //   () => {}
+    // );
 
     let studentsByWeeks: Array<Array<Student>> = [];
     for (let i = 0; i < callsDividedByWeeks.length; i++) {
