@@ -81,7 +81,7 @@ class GoogleDrive {
         }
       }
     } catch (err: any) {
-      throw new Error("Failed to share file " + err.message);
+      throw new Error("Failed to share file with multiple mails" + err.message);
     }
   }
 

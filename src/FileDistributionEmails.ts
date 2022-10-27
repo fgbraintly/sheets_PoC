@@ -42,7 +42,10 @@ class FileDistributionEmails {
       "GILSP2B": ["kozakt@gilmour.org"],
       "GSP322": ["kozakt@gilmour.org"],
       "22TGSP3": ["trombettaa@gilmour.org"],
-      "UBXDDT":["rebecca.carte@tri-c.edu"]
+      "UBXDDT":["rebecca.carte@tri-c.edu"],
+      "MNSNKV":["spencel@bbhcsd.org"],
+      "UOTJQD":["ssebring1@ignatius.edu"],
+      "FNDWVB":["alicia.furgueson@danahall.org"]
     };
 
   constructPermission(code: string) {

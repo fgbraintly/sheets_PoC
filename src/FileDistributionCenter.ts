@@ -66,7 +66,7 @@ class FileDistributionCenter {
         },
       };
     const created = await this.sheetService.writeFile(resource);
-    await this.share();
+    await this.share(this.linkBankId);
   }
 
   async updateSpreadSheet(file: string) {
@@ -84,10 +84,10 @@ class FileDistributionCenter {
       file,
       resource
     );
-    await this.share();
+    await this.share(this.linkBankId);
   }
 
-  async share(id?:string) {
+  async share(id:string) {
     this.drive.shareFilesToMultipleEmails(
       [
         {
