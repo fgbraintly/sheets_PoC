@@ -54,6 +54,11 @@ class FileDistributionEmails {
     "LCTSGM": ["zellera@hoban.org"],
     "SFMBQR": ["zellera@hoban.org"],
     "VIZDYE": ["zellera@hoban.org"],
+    "PTMSP4": ["dshannon@potomacschool.org"],
+    "AGRMQZ": ["paula@ischool.org"],
+    "ASHSP3A": ["mabickle@goarrows.org"],
+    "ASHSP3B": ["mabickle@goarrows.org"],
+    "ASHSP3C": ["mabickle@goarrows.org"],
   };
 
   constructPermission(code: string) {
