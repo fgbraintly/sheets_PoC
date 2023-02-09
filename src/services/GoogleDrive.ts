@@ -49,17 +49,19 @@ class GoogleDrive {
     fileId: string
   ) {
     let params: drive_v3.Params$Resource$Permissions$Create | undefined = {
-      requestBody: { type: type, role: role, emailAddress: emailAddress },
+      requestBody: { type: type, role: role },
+      // requestBody: { type: type, role: role, emailAddress: emailAddress },
       fileId: fileId,
       fields: "id",
       sendNotificationEmail: false,
+      // transferOwnership:true
     };
     try {
       const response = await this.drive?.permissions.create(params);
       const fileId = <string>response?.data.id;
       return fileId;
     } catch (err: any) {
-      throw new Error("Failed to share file" + err.message);
+      throw new Error("Failed to share file " + err.message);
     }
   }
   async shareFilesToMultipleEmails(
