@@ -25,6 +25,7 @@ class GoogleSheets {
     try {
       const sheet: GaxiosResponse<sheets_v4.Schema$Spreadsheet> | undefined =
         await this.googlesheets?.spreadsheets.create(resource, {
+          retry: true,
           retryConfig: { retry: 61000 },
         });
       return <string>sheet?.data.spreadsheetId;
@@ -163,6 +164,7 @@ class GoogleSheets {
       const results = await this.googlesheets?.spreadsheets.batchUpdate(
         resource,
         {
+          retry: true,
           retryConfig: {
             retryDelay: 121000,
           },
@@ -178,6 +180,7 @@ class GoogleSheets {
       const response = await this.googlesheets?.spreadsheets.batchUpdate(
         resource,
         {
+          retry: true,
           retryConfig: {
             retryDelay: 121000,
           },
@@ -209,7 +212,7 @@ class GoogleSheets {
       };
       const result = await this.googlesheets?.spreadsheets.values.batchUpdate(
         resource,
-        { retryConfig: retryConfig }
+        { retry: true, retryConfig: retryConfig }
       );
       result?.config.retryConfig;
     } catch (error: any) {
@@ -252,10 +255,13 @@ class GoogleSheets {
     spreadSheetId: string,
     resource: sheets_v4.Schema$BatchUpdateValuesRequest
   ) {
-    const result = await this.googlesheets?.spreadsheets.values.batchUpdate({
-      spreadsheetId: spreadSheetId,
-      requestBody: resource,
-    });
+    const result = await this.googlesheets?.spreadsheets.values.batchUpdate(
+      {
+        spreadsheetId: spreadSheetId,
+        requestBody: resource,
+      },
+      { retry: true, retryConfig: { retryDelay: 120000 } }
+    );
   }
 }
 
