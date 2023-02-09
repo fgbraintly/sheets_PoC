@@ -8,7 +8,7 @@ import { drive_v3 } from "googleapis";
 import FileDistributionEmails from "./FileDistributionEmails";
 import FileDistributionCenter from "./FileDistributionCenter";
 import { initial } from "lodash";
-
+import { write, writeFile } from "fs";
 dotenv.config();
 
 const deleteFiles = async () => {
@@ -22,15 +22,26 @@ const deleteFiles = async () => {
 };
 const generateSheetInGoogleDrive = async () => {
   // await deleteFiles();
-  const emailService = new FileDistributionEmails();
-  const linkBank = new FileDistributionCenter();
+  // const emailService = new FileDistributionEmails();
   const callService = new Calls();
   const drive = new GoogleDrive();
   const sheets = new GoogleSheets();
   const sequelizeService = new SequelizeService();
-  const institutions = await sequelizeService.queryCodes();
+  const institutionsList = await sequelizeService.queryCodes();
 
-  await linkBank.createFile();
+  let arrayData = [];
+
+  let middle = Math.ceil(institutionsList.length / 2);
+  // let institutions = institutionsList.slice(0, middle);
+  // console.log("🚀 ~ file: index.ts:35 ~ generateSheetInGoogleDrive ~ firstHalf", firstHalf.length)
+  let institutions = institutionsList.slice(middle);
+  // console.log("🚀 ~ file: index.ts:37 ~ generateSheetInGoogleDrive ~ secondHalf", secondHalf.length)
+
+  const linkBank = new FileDistributionCenter({
+    isFirstHalf: true,
+    range: 0,
+  });
+  // await linkBank.createFile();
 
   for (const institution of institutions) {
     //Si existe la institucion
@@ -49,13 +60,13 @@ const generateSheetInGoogleDrive = async () => {
         //Genera el reporte
         await callService.generateReport(institution.code, sheetID);
 
-        await drive.shareFilesToMultipleEmails(
-          emailService.constructPermission(institution.code),
-          sheetID,
-          true
-        );
+        // await drive.shareFilesToMultipleEmails(
+        //   emailService.constructPermission(institution.code),
+        //   sheetID,
+        //   true
+        // );
         await drive.shareFiles(
-          "user",
+          "anyone",
           "services@time2talk.app",
           "reader",
           folder
@@ -69,13 +80,13 @@ const generateSheetInGoogleDrive = async () => {
           sheetID = await sheets.createFile(institution.code);
           await callService.generateReport(institution.code, sheetID);
           await drive.moveFilesToFolder(sheetID, folder);
-          await drive.shareFilesToMultipleEmails(
-            emailService.constructPermission(institution.code),
-            sheetID,
-            true
-          );
+          // await drive.shareFilesToMultipleEmails(
+          //   emailService.constructPermission(institution.code),
+          //   sheetID,
+          //   true
+          // );
           await drive.shareFiles(
-            "user",
+            "anyone",
             "services@time2talk.app",
             "reader",
             folder
@@ -90,20 +101,33 @@ const generateSheetInGoogleDrive = async () => {
           await drive.moveFilesToFolder(file?.id as string, folder);
         }
         await drive.shareFiles(
-          "user",
+          "anyone",
           "services@time2talk.app",
           "reader",
           folder
         );
       }
+      // arrayData.push({
+      //   code: institution.code,
+      //   link: `=HYPERLINK("https://docs.google.com/spreadsheets/d/${sheetID}","${institution.code}: Link to automated report with calls details and recordings")`,
+      //   formulae: `"=IMPORTRANGE("https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo","Sheet1!B${
+      //     arrayData.length + 1
+      //   }")"`
+      // });
       linkBank.addLink(
         institution.code,
         `=HYPERLINK("https://docs.google.com/spreadsheets/d/${sheetID}","${institution.code}: Link to automated report with calls details and recordings")`
       );
+      // https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo/edit#gid=0
+      //`"=IMPORTRANGE("https://docs.google.com/spreadsheets/d/${this.linkBankId}","Sheet1!B${this.files.length + 1}")"`
     }
     // institution.name !== null
   }
   await linkBank.updateValues();
+
+  // writeFile("linkbank.json", JSON.stringify(arrayData,null,2), (err) => {
+  //   console.log(err);
+  // });
 };
 
 const createLinkBank = async () => {
@@ -144,13 +168,18 @@ export const handler = async (
   };
 };
 
-// (async () => {
+(async () => {
   // const drive = new GoogleDrive();
-  // const drives = await drive.listFiles();
+  // await drive.deleteFolder({id:"165Jo8G1OHe05Br-NMCbWIO0Xi8b30rIPqS0Mol1mvl0"})
+  // await drive.deleteFolder({id:"1b1IPAwXfIMOphVqpul9McYN0qOWt6t_8_numzvEL4fY"})
+  // const drives = await drive.searchFile("LinkBankManual");
   // console.log(JSON.stringify(drives, null, 2));
   // const s = new FileDistributionCenter();
-  // await s.share("1rxFXGR4_lU_iiNxc6r7v5fQCSkyRDrQW667a2h-11DA");
-//   await deleteFiles();
-//   await generateSheetInGoogleDrive();
-//   await createLinkBank();
-// })();
+  // await s.share("1f7lDTUw7VdcepOJnpUPhaDh5iyVwxWeHXA_DOr7nUHk");
+  // await deleteFiles();
+  // await generateSheetInGoogleDrive();
+  // await createLinkBank();
+})();
+
+//165Jo8G1OHe05Br-NMCbWIO0Xi8b30rIPqS0Mol1mvl0
+//1b1IPAwXfIMOphVqpul9McYN0qOWt6t_8_numzvEL4fY

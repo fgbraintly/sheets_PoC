@@ -51,14 +51,14 @@ class FileDistributionEmails {
     "3HONB": ["eromeyn@brunswickschool.org"],
     "3HOND": ["eromeyn@brunswickschool.org"],
     "3HONG": ["eromeyn@brunswickschool.org"],
-    "LCTSGM": ["zellera@hoban.org"],
-    "SFMBQR": ["zellera@hoban.org"],
-    "VIZDYE": ["zellera@hoban.org"],
-    "PTMSP4": ["dshannon@potomacschool.org"],
-    "AGRMQZ": ["paula@ischool.org"],
-    "ASHSP3A": ["mabickle@goarrows.org"],
-    "ASHSP3B": ["mabickle@goarrows.org"],
-    "ASHSP3C": ["mabickle@goarrows.org"],
+    // "LCTSGM": ["zellera@hoban.org"],
+    // "SFMBQR": ["zellera@hoban.org"],
+    // "VIZDYE": ["zellera@hoban.org"],
+    // "PTMSP4": ["dshannon@potomacschool.org"],
+    // "AGRMQZ": ["paula@ischool.org"],
+    // "ASHSP3A": ["mabickle@goarrows.org"],
+    // "ASHSP3B": ["mabickle@goarrows.org"],
+    // "ASHSP3C": ["mabickle@goarrows.org"],
   };
 
   constructPermission(code: string) {

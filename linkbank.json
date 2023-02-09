@@ -1,0 +1,352 @@
+[
+  {
+    "code": "JAGUARSIND",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1UcxpbrFd0cSy9WqR_zeK6aSzOZgf6V4FDSZq1v8FKeA\",\"JAGUARSIND: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B1\")\""
+  },
+  {
+    "code": "GILSP2B",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1oVy9MkEyO0bP9GtKnMeJagugfP735mE3Az2kvzvewJ8\",\"GILSP2B: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B2\")\""
+  },
+  {
+    "code": "CCPL2022A",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1Q8gH-2KEjQL2U5TVzGmgDVmPxNdtnZKgEOPKkZ6R9JQ\",\"CCPL2022A: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B3\")\""
+  },
+  {
+    "code": "SUHSSP3",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1LCvlNnRyGC9thXa0Sc2jQ6m18lfFzwSM5PpVCNGsTLk\",\"SUHSSP3: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B4\")\""
+  },
+  {
+    "code": "AKRONA1",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1lk1W_faylGTTD5-kD5MMsEEAhRqp-i_xMw4J9Mwvv9Q\",\"AKRONA1: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B5\")\""
+  },
+  {
+    "code": "BWU30122",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1hGtE1sOOfIBzQiKHfb79h3lvjq_WoJMNyqoyjAOqXXk\",\"BWU30122: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B6\")\""
+  },
+  {
+    "code": "BWU27022",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1vs9iWbGLpYa8BaIf6vanyIkPGD0cml0yF2q-Y1eT8Ms\",\"BWU27022: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B7\")\""
+  },
+  {
+    "code": "SP141122",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1htvmvFIXTu7Vlz-GFGbXJZ_8XVku9d-21Zb7qKO_ROI\",\"SP141122: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B8\")\""
+  },
+  {
+    "code": "SP201CC",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1C0swd3L52QBBm6Jg68nMoPz-UgWr6vv8iK7nSPkInqQ\",\"SP201CC: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B9\")\""
+  },
+  {
+    "code": "UASP10222",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1xvOjlcigtFggPdOigNiJ2XmNjXUe3UxgE4i9n4BM3qE\",\"UASP10222: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B10\")\""
+  },
+  {
+    "code": "UAC22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/14-h0XEZ34-IEHcYMAKJX28KH1_aO9ngvWIg3Di3GvhM\",\"UAC22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B11\")\""
+  },
+  {
+    "code": "EFSCF22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/12Tif6DLGFK090sNWuOItadryUhvBSCxm_UaVo_82tHI\",\"EFSCF22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B12\")\""
+  },
+  {
+    "code": "CHSSP5",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1iRH9TFVA5N9QtTydcZoIurBaNpUa7DkjrOxe6e_1l6Q\",\"CHSSP5: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B13\")\""
+  },
+  {
+    "code": "DOUBLET2T",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1xPi4KRlsxsFpN6mbiYiky5khCCoA7rU8E-cyRt0gITU\",\"DOUBLET2T: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B14\")\""
+  },
+  {
+    "code": "SP3HJAG",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1w2S-txoq94U3sOJYdcepVqHnDydNwq93Z0DOpqoN5jI\",\"SP3HJAG: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B15\")\""
+  },
+  {
+    "code": "SBSCO22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1uCuTTXnswy_9xaVHEjstTjfNFGKzSC--KiCB4h4gXrc\",\"SBSCO22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B16\")\""
+  },
+  {
+    "code": "PREAPG22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1AHGkA8mckmyzF0t0496BrXKdTmnQOUmMHYtBlVOWeYM\",\"PREAPG22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B17\")\""
+  },
+  {
+    "code": "JAGSP223",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1_hMSaeaLVT4lzwiH8u18e04ZkNsWXkAi-LrTh4Cn_6k\",\"JAGSP223: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B18\")\""
+  },
+  {
+    "code": "TAPG22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/12d4elkRn4t-HZ4tb5yR0pbEJwZWuDiUGaCYAGmSsw-U\",\"TAPG22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B19\")\""
+  },
+  {
+    "code": "22TC1011",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/14wkk5aJQZfOimpJpax_SlQ9RwQPQESDc3tkEgxJo1Os\",\"22TC1011: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B20\")\""
+  },
+  {
+    "code": "22TRICSP12",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1_DSiEpYUjP70HTkpYFNEfJaZSwxS6JbbiXIQZDP08QI\",\"22TRICSP12: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B21\")\""
+  },
+  {
+    "code": "TC2010",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/13TqTYgW7H15uNiWSujHmGrmQCNzGmnKTS4151NsvW_E\",\"TC2010: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B22\")\""
+  },
+  {
+    "code": "TC2411",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1xQWO1j48CXT-f_SKtghXCwgg25YJ-JKxfUwd0Vo4ebs\",\"TC2411: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B23\")\""
+  },
+  {
+    "code": "GSP322",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1l37Qu2Iu6J9X8HEcxFeGUViZl6KuCJpR_ATQAxFkl14\",\"GSP322: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B24\")\""
+  },
+  {
+    "code": "GNSPAP22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1uV4Qu9BZBgRwgVjmAfBFEWkqXftoQDeACTxN4uNOTKc\",\"GNSPAP22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B25\")\""
+  },
+  {
+    "code": "CSHSP4",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1ly-a7dpRYbClFPF4BRoQ3bMnDyrP2rTzRcBW3EIeciY\",\"CSHSP4: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B26\")\""
+  },
+  {
+    "code": "CSHAPB22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/12tyncXppdsNAypWIxH0QHGNjnNgKJNcxGcnSsuXV-uw\",\"CSHAPB22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B27\")\""
+  },
+  {
+    "code": "CSHIBSL2",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1mq7enqymd_jjympngZ4wKnT7_ee9d8gGcqAc9y9pHTk\",\"CSHIBSL2: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B28\")\""
+  },
+  {
+    "code": "CSHSP3",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1x29O-9Y5XdrloUfOsQ9lxmIwkyWlupJx4qNHfT1ps4Y\",\"CSHSP3: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B29\")\""
+  },
+  {
+    "code": "22TGSP3",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1mi2yJP8rXZnIFvwlk33hLo6AOj6rZvKA-XiD5-DeRtQ\",\"22TGSP3: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B30\")\""
+  },
+  {
+    "code": "CSHAR2",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1EdIWQ6A7Tt4JShN2jq4ijN6EROsgU6XE6d5LFa8FweA\",\"CSHAR2: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B31\")\""
+  },
+  {
+    "code": "ASHSP5",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/13HDxJJKoqXdb7E35NYNKF1Go9GSNK88KecSPHplAodA\",\"ASHSP5: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B32\")\""
+  },
+  {
+    "code": "LHWSP3",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1EQ2k8lmBE-bS2g3NS2LGg3WU1VqAen0oTu293JBNUdk\",\"LHWSP3: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B33\")\""
+  },
+  {
+    "code": "UALKCP",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1krwD94T6antb2T0uoZjWGUwChbqXNoH4rvxMeW1uCEU\",\"UALKCP: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B34\")\""
+  },
+  {
+    "code": "CSHIBHL1",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1B0MxHgs6hpZfVhfVZNe8lbNgeIRknYb4E8Td_gmghsM\",\"CSHIBHL1: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B35\")\""
+  },
+  {
+    "code": "CSHIBHL2",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1WSbP-NeCiV-_keZKvTDUTIllGzB62htsmwtwvVD8wZA\",\"CSHIBHL2: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B36\")\""
+  },
+  {
+    "code": "GJCSP122",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1_CT_Q2zfvK_YdPHR4iGGrgtewYYxWtUd_kPDe0T_tY8\",\"GJCSP122: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B37\")\""
+  },
+  {
+    "code": "GJCSP322",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1UBftk_Qh8duv-i1o0zeFIRUJ9SQtdpm44G8RE8MtE4c\",\"GJCSP322: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B38\")\""
+  },
+  {
+    "code": "DCAP22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1NjJ0liCVF03lO6zO-FahFS-vu7vMaY-kFzVgYH2h2GM\",\"DCAP22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B39\")\""
+  },
+  {
+    "code": "REBECCA22",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1ikNkba2q-Id4WjfdGwfy-7gAta_YKU3eQUl-gA44Le8\",\"REBECCA22: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B40\")\""
+  },
+  {
+    "code": "UOTJQD",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1ccME4mYbop36bjnTC98lEfrvbNrWa4hxHFVfyBWLBP0\",\"UOTJQD: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B41\")\""
+  },
+  {
+    "code": "JLSMBG",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1xGDU7L8q6vEOUfJRC05laGHnrsNQO27fHkjn1D7iB48\",\"JLSMBG: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B42\")\""
+  },
+  {
+    "code": "FNDWVB",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1EBnyL09i_8QVvOhVnMb9qClzNYTgFVrijOw96mQYOxk\",\"FNDWVB: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B43\")\""
+  },
+  {
+    "code": "MNSNKV",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1eRBuod0CzznT_ojznduQEAHu0B9iGEg6SvJf1SFHbNw\",\"MNSNKV: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B44\")\""
+  },
+  {
+    "code": "UBXDDT",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1RR1etQRGVv8oEjhAfwz07cvR87sVDbDk3BJTMaqCFXU\",\"UBXDDT: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B45\")\""
+  },
+  {
+    "code": "VENJZZ",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1AWFghnq1OB3QDO2nHOdqaN16C5z2BSYvVBlHKbHb_xg\",\"VENJZZ: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B46\")\""
+  },
+  {
+    "code": "XXGCWM",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1ZqSr3jJQPB7CBaFKwo-CUYkBcR5Jx13hhTwXlMnrEko\",\"XXGCWM: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B47\")\""
+  },
+  {
+    "code": "ABRAHAM",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1QfT7TzjdcVEW3TUGVobImit_kkp2SzNYwdplGyMbSz4\",\"ABRAHAM: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B48\")\""
+  },
+  {
+    "code": "3HONB",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1fVnVwUMMnrJLJjM-SnNA2hHxJk_WexMSEZJXQhZEiBA\",\"3HONB: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B49\")\""
+  },
+  {
+    "code": "3HOND",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/122V_3CGxAMDyUw71hPqZeQBYexx9zPwmCuzYqcGibUY\",\"3HOND: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B50\")\""
+  },
+  {
+    "code": "3HONG",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1g2hcd0Pjk8q0Yf29VCxIMXSybMqpK0xtTa1qGFyaRmg\",\"3HONG: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B51\")\""
+  },
+  {
+    "code": "LILLIAN",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1vzxuE-cEOrbM5zz4rZoEJQeRPxTtUuE5wQKdLMbYTbk\",\"LILLIAN: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B52\")\""
+  },
+  {
+    "code": "LCTSGM",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1KJE1OQllwqxALAWTRHBtL8CUNHb-mo47MNK3VNJAOuQ\",\"LCTSGM: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B53\")\""
+  },
+  {
+    "code": "SFMBQR",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1yb2jE46poz-AuDih1BZjmWgeFkSH-U17ojcq7lHo3Xw\",\"SFMBQR: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B54\")\""
+  },
+  {
+    "code": "VIZDYE",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1sCKFJmTSoEm4QvJ-2gDxTmmvmoZWpy67izTYP17Qflc\",\"VIZDYE: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B55\")\""
+  },
+  {
+    "code": "ASHSP3A",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1Vz6j0DCl3ZxssLRwt-HGG4O0ocYzwE1BkKe959t6mjs\",\"ASHSP3A: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B56\")\""
+  },
+  {
+    "code": "ASHSP3B",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/16oaEUeCZ0ELbCh528NigNhERzz8CyDxxlrKl2XWf1Ak\",\"ASHSP3B: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B57\")\""
+  },
+  {
+    "code": "ASHSP3C",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1-r50pynVklNWsGyJWsW5_nDEErCyO_zcepxccVUrVAQ\",\"ASHSP3C: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B58\")\""
+  },
+  {
+    "code": "SP4US",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1z1Sl7nA6a6FvRssyfrHg0X3tNglsuCNGTsERWXZxZRk\",\"SP4US: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B59\")\""
+  },
+  {
+    "code": "30MINBW",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1uYTXlTvBe08ilPtkHhAI0_MqX9XfErf8NsNgWQ7-nRQ\",\"30MINBW: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B60\")\""
+  },
+  {
+    "code": "PTMSP4",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1DJjdxMZ9bvvM4oHbh2O3ClU0AxE1IiCYcyaSAw6Oa_E\",\"PTMSP4: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B61\")\""
+  },
+  {
+    "code": "AGRMQZ",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1nQ-d8TIiNLIeg-sRNRe9JNHkZppLNXcFs01tQo90sBQ\",\"AGRMQZ: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B62\")\""
+  },
+  {
+    "code": "MARTHA3",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1cgCdnu_jta8oBdWuqAhr1aWutsY_pYCU4Qqj-o0nZgU\",\"MARTHA3: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B63\")\""
+  },
+  {
+    "code": "IND22JAG",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1zknCTsUxMiqsyJPJrmj_A3_zFkDqbETFkEoWcbBu6TY\",\"IND22JAG: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B64\")\""
+  },
+  {
+    "code": "AAGTSP1",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1uo-Csw4x5honLsnPHAEB0QksVGbNT3-EYmkAQEALv9w\",\"AAGTSP1: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B65\")\""
+  },
+  {
+    "code": "SP3DB",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1oQqpO6i7cTA9jD_uycc0P2Q_ILqoQh_od4AE-WhyF5Y\",\"SP3DB: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B66\")\""
+  },
+  {
+    "code": "SP3RD",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1863VemrCNGvWgvLsjFti4Mo9BUM7TnxGu8cvbNSaHbM\",\"SP3RD: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B67\")\""
+  },
+  {
+    "code": "FVSPAP",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1cPanoUjkuzJIfKZ8y52YylMzG_uv254-zSVxT6RXHP8\",\"FVSPAP: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B68\")\""
+  },
+  {
+    "code": "LVSP2",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/19bxznDisD_Be4Mc86Km4gUBpxsNxULX3wvw8RKAg_nI\",\"LVSP2: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B69\")\""
+  },
+  {
+    "code": "LVSP4",
+    "link": "=HYPERLINK(\"https://docs.google.com/spreadsheets/d/1yByxb_A88cY2CdRDsJtshKEAQWfpyl0KCb5yqwJvOEw\",\"LVSP4: Link to automated report with calls details and recordings\")",
+    "formulae": "\"=IMPORTRANGE(\"https://docs.google.com/spreadsheets/d/1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo\",\"Sheet1!B70\")\""
+  }
+]

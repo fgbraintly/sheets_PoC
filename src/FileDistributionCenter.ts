@@ -7,17 +7,23 @@ interface LinkedFile {
   link?: string;
 }
 
+interface Half {
+  isFirstHalf: boolean;
+  range: number;
+}
 class FileDistributionCenter {
   private files: Array<string[]>;
   private sheetService: GoogleSheets;
   private drive: GoogleDrive;
-  private name = "LinkBank";
+  private name = "LinkBankManual";
   private range: string;
   private linkBankId: string;
-  constructor() {
+  private half: Half;
+  constructor(half: Half) {
     this.files = [];
     this.range = "";
-    this.linkBankId = "";
+    this.half = half;
+    this.linkBankId = "1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo";
     this.sheetService = new GoogleSheets();
     this.drive = new GoogleDrive();
   }
@@ -66,7 +72,7 @@ class FileDistributionCenter {
         },
       };
     const created = await this.sheetService.writeFile(resource);
-    await this.share(this.linkBankId);
+    // await this.share(this.linkBankId);
   }
 
   async updateSpreadSheet(file: string) {
@@ -84,10 +90,10 @@ class FileDistributionCenter {
       file,
       resource
     );
-    await this.share(this.linkBankId);
+    // await this.share(this.linkBankId);
   }
 
-  async share(id:string) {
+  async share(id: string) {
     this.drive.shareFilesToMultipleEmails(
       [
         {
@@ -112,7 +118,7 @@ class FileDistributionCenter {
         },
         {
           type: "user",
-          role: "reader",
+          role: "owner",
           emailAddress: "services@time2talk.app",
         },
       ],
