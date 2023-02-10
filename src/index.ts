@@ -28,20 +28,29 @@ const generateSheetInGoogleDrive = async () => {
   const drive = new GoogleDrive();
   const sheets = new GoogleSheets();
   const sequelizeService = new SequelizeService();
-  const institutionsList = await sequelizeService.queryCodes();
+  const institutions = await sequelizeService.queryCodes();
 
   let arrayData = [];
 
-  let middle = Math.ceil(institutionsList.length / 2);
+  // let middle = Math.ceil(institutionsList.length / 2);
   // let institutions = institutionsList.slice(0, middle);
   // console.log("🚀 ~ file: index.ts:35 ~ generateSheetInGoogleDrive ~ firstHalf", firstHalf.length)
-  let institutions = institutionsList.slice(middle);
+  // let institutions = institutionsList.slice(middle);
   // console.log("🚀 ~ file: index.ts:37 ~ generateSheetInGoogleDrive ~ secondHalf", secondHalf.length)
 
   // await linkBank.createFile();
 
   for (const institution of institutions) {
     //Si existe la institucion
+    if (institution.code == "GILSP2B") {
+      linkBank.addLink(
+        institution.code,
+        "disabled"
+      );
+      continue;
+    }
+    console.log(institution.code);
+    
     if (institution.name) {
       //Buscamos la carpeta
       let sheetID;
@@ -147,23 +156,23 @@ const loggeeameesacosa = async () => {
   }
 };
 
-export const handler = async (
-  event: APIGatewayEvent,
-  context: Context
-): Promise<APIGatewayProxyResult> => {
-  console.log(`Event: ${JSON.stringify(event, null, 2)}`);
-  console.log(`Context: ${JSON.stringify(context, null, 2)}`);
+// export const handler = async (
+//   event: APIGatewayEvent,
+//   context: Context
+// ): Promise<APIGatewayProxyResult> => {
+//   console.log(`Event: ${JSON.stringify(event, null, 2)}`);
+//   console.log(`Context: ${JSON.stringify(context, null, 2)}`);
 
-  await deleteFiles();
-  await generateSheetInGoogleDrive();
+//   await deleteFiles();
+//   await generateSheetInGoogleDrive();
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      status: "ok",
-    }),
-  };
-};
+//   return {
+//     statusCode: 200,
+//     body: JSON.stringify({
+//       status: "ok",
+//     }),
+//   };
+// };
 
 (async () => {
   // const drive = new GoogleDrive();
@@ -173,8 +182,8 @@ export const handler = async (
   // console.log(JSON.stringify(drives, null, 2));
   // const s = new FileDistributionCenter();
   // await s.share("1f7lDTUw7VdcepOJnpUPhaDh5iyVwxWeHXA_DOr7nUHk");
-  // await deleteFiles();
-  // await generateSheetInGoogleDrive();
+  await deleteFiles();
+  await generateSheetInGoogleDrive();
   // await createLinkBank();
 })();
 

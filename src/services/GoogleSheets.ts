@@ -216,7 +216,7 @@ class GoogleSheets {
       );
       result?.config.retryConfig;
     } catch (error: any) {
-      throw new Error("Write file error: " + error.message);
+      throw new Error(`Write file error: ${error.message}`);
     }
   }
 

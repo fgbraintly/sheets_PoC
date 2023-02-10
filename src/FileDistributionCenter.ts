@@ -11,13 +11,13 @@ class FileDistributionCenter {
   private files: Array<string[]>;
   private sheetService: GoogleSheets;
   private drive: GoogleDrive;
-  private name = "LinkBank";
+  private name = "LinkBankManual";
   private range: string;
   private linkBankId: string;
   constructor() {
     this.files = [];
     this.range = "";
-    this.linkBankId = "";
+    this.linkBankId = "1wQyFnOfaqEGAY_oHQEd_aOq7m1xt_s58GykIjPfZoIo";
     this.sheetService = new GoogleSheets();
     this.drive = new GoogleDrive();
   }
@@ -39,6 +39,8 @@ class FileDistributionCenter {
         this.linkBankId
       }","Sheet1!B${this.files.length + 1}")"`,
     ]);
+    // console.log("🚀 ~ file: FileDistributionCenter.ts:41 ~ FileDistributionCenter ~ addLink ~ this.linkBankId", this.linkBankId)
+    // console.log("🚀 ~ file: FileDistributionCenter.ts:42 ~ FileDistributionCenter ~ addLink ~ this.files", this.files)
   }
 
   logme() {
@@ -65,7 +67,8 @@ class FileDistributionCenter {
           ],
         },
       };
-    const created = await this.sheetService.writeFile(resource);
+    await this.sheetService.writeFile(resource);
+
     await this.share(this.linkBankId);
   }
 
@@ -87,7 +90,7 @@ class FileDistributionCenter {
     await this.share(this.linkBankId);
   }
 
-  async share(id:string) {
+  async share(id: string) {
     this.drive.shareFilesToMultipleEmails(
       [
         {
@@ -114,6 +117,11 @@ class FileDistributionCenter {
           type: "user",
           role: "reader",
           emailAddress: "services@time2talk.app",
+        },
+        {
+          type: "user",
+          role: "reader",
+          emailAddress: "franco.garancini@braintly.com",
         },
       ],
       id as string,
