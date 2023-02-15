@@ -5,6 +5,8 @@ import { CallResponse } from "../types/CallResponse";
 import { Institution } from "../types/Institution";
 import { CallTyped } from "../types/CallTyped";
 import { Week } from "../types/Week";
+import { Sumary } from "../types/Sumary";
+import { WeekDetails } from "../types/WeekDetail";
 
 class SequelizeService {
   private sequelize: Sequelize;
@@ -98,7 +100,7 @@ class SequelizeService {
 
   async queryCodes(): Promise<Array<Institution>> {
     return await this.sequelize.query(
-      "SELECT promotional_codes.title, promotional_codes.enabled,promotional_codes.code,promotional_codes.created_at,promotional_codes.temary,promotional_codes.generate_report,institutions.name FROM promotional_codes left join institutions on institutions.id = promotional_codes.institution_id where promotional_codes.generate_report = 1",
+      "SELECT promotional_codes.title, promotional_codes.enabled,promotional_codes.code,promotional_codes.created_at,promotional_codes.temary,promotional_codes.generate_report,institutions.name FROM promotional_codes left join institutions on institutions.id = promotional_codes.institution_id",
       { type: QueryTypes.SELECT, raw: true }
     );
   }
@@ -205,7 +207,7 @@ class SequelizeService {
   }
 
   async getProgramDateCallV2(_code: string) {
-    return await this.sequelize.query(
+    return (await this.sequelize.query(
       `SELECT 
           promotional_codes_students.student_id,
           promotional_codes_students.promotional_code_id,
@@ -223,7 +225,96 @@ class SequelizeService {
           WHERE
         code = '${_code}' ORDER BY redeemDate LIMIT 1`,
       { type: QueryTypes.SELECT, raw: true }
-    ) as Array<any>;
+    )) as Array<any>;
+  }
+
+  async getSummary(_code: string) {
+    return (await this.sequelize.query(
+      `SELECT 
+      students.id AS studentId,
+      users.first_name AS studentFirstName,
+      users.last_name AS studentLastName,
+      promotional_codes.code AS promotionalCode,
+      SUM(calls.duration) AS studentTotalTimeSpoken,
+      COUNT(calls.id) AS studentTotalCalls
+  FROM
+      calls
+          JOIN
+      students ON calls.student_id = students.id
+          JOIN
+      users ON students.user_id = users.id
+          JOIN
+      institution_student ON students.id = institution_student.student_id
+          JOIN
+      (SELECT 
+          student_id, MAX(created_at) AS max_created_at
+      FROM
+          institution_student
+      GROUP BY student_id) AS last_redeem ON institution_student.student_id = last_redeem.student_id
+          AND institution_student.created_at = last_redeem.max_created_at
+          JOIN
+      promotional_codes ON institution_student.promotional_code_id = promotional_codes.id
+  WHERE
+      promotional_codes.code = '${_code}'
+          AND calls.created_at >= last_redeem.max_created_at
+          AND calls.duration > 120
+  GROUP BY students.id , users.first_name , users.last_name , promotional_codes.code`,
+      { type: QueryTypes.SELECT, raw: true }
+    )) as Sumary[];
+  }
+
+  async allCalls(_code: string) {
+    return (await this.sequelize.query(
+      `SELECT DISTINCT
+      s.id AS student_id,
+      u.first_name AS studentFirstName,
+      u.last_name AS studentLastName,
+      coaches.id AS coach_id,
+      cu.first_name AS coachFirstName,
+      cu.last_name AS coachLastName,
+      calls.duration AS duration,
+      calls.recording_url AS recording,
+      calls.created_at AS dateTime,
+      countries.name AS coachNationality
+  FROM
+      students s
+          JOIN
+      calls ON calls.student_id = s.id
+          JOIN
+      users u ON s.user_id = u.id
+          JOIN
+      institution_student ON s.id = institution_student.student_id
+          INNER JOIN
+      promotional_codes ON promotional_codes.institution_id = institution_student.institution_id
+          INNER JOIN
+      (SELECT 
+          promotional_codes_students.student_id,
+              promotional_codes_students.promotional_code_id,
+              promotional_codes.code,
+              max
+      FROM
+          promotional_codes_students
+      INNER JOIN promotional_codes ON promotional_codes.id = promotional_codes_students.promotional_code_id
+      INNER JOIN (SELECT 
+          student_id, MAX(created_at) AS max
+      FROM
+          promotional_codes_students
+      GROUP BY student_id) AS temp ON temp.student_id = promotional_codes_students.student_id
+          AND temp.max = promotional_codes_students.created_at
+      WHERE
+          code = '${_code}') AS lastCodeRedeem ON lastCodeRedeem.student_id = calls.student_id
+          JOIN
+      coaches ON calls.coach_id = coaches.id
+          JOIN
+      users cu ON coaches.user_id = cu.id
+          JOIN
+      countries ON coaches.nationality = countries.id
+  WHERE
+      calls.created_at >= institution_student.created_at
+          AND calls.duration > 120
+  ORDER BY s.id , calls.created_at`,
+      { type: QueryTypes.SELECT, raw: true }
+    )) as WeekDetails[];
   }
 }
 

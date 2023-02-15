@@ -9,6 +9,7 @@ import FileDistributionEmails from "./FileDistributionEmails";
 import FileDistributionCenter from "./FileDistributionCenter";
 import { initial } from "lodash";
 import { write, writeFile } from "fs";
+import CallsV2 from "./CallsV2";
 dotenv.config();
 
 const deleteFiles = async () => {
@@ -43,14 +44,11 @@ const generateSheetInGoogleDrive = async () => {
   for (const institution of institutions) {
     //Si existe la institucion
     if (institution.code == "GILSP2B") {
-      linkBank.addLink(
-        institution.code,
-        "disabled"
-      );
+      linkBank.addLink(institution.code, "disabled");
       continue;
     }
     console.log(institution.code);
-    
+
     if (institution.name) {
       //Buscamos la carpeta
       let sheetID;
@@ -182,9 +180,11 @@ const loggeeameesacosa = async () => {
   // console.log(JSON.stringify(drives, null, 2));
   // const s = new FileDistributionCenter();
   // await s.share("1f7lDTUw7VdcepOJnpUPhaDh5iyVwxWeHXA_DOr7nUHk");
-  await deleteFiles();
-  await generateSheetInGoogleDrive();
+  // await deleteFiles();
+  // await generateSheetInGoogleDrive();
   // await createLinkBank();
+  const calls = new CallsV2();
+  await calls.generateReport("TAPG22");
 })();
 
 //165Jo8G1OHe05Br-NMCbWIO0Xi8b30rIPqS0Mol1mvl0

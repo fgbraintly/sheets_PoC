@@ -7,12 +7,15 @@ import { Call } from "./types/Call";
 import { CallTyped } from "./types/CallTyped";
 import { Student } from "./types/Student";
 import { Week } from "./types/Week";
+import { TotalsOfSumary } from "./types/TotalsOfSumary";
+import { sheets_v4 } from "googleapis";
 
 class CallsV2 {
   private sequelizeService;
   private sheetService;
   private driveService;
   private totalTimeSpoken: Duration | undefined;
+
   private header: string[] = [
     "First Name",
     "Last Name",
@@ -25,149 +28,102 @@ class CallsV2 {
     this.driveService = new GoogleDrive();
   }
 
-  async getWeeks(_code: string) {
-    const codeRedeemDate = await this.sequelizeService.getProgramDateCallV2(
-      _code
-    );
-    const weekOfFirstProgramCall = moment(
-      codeRedeemDate[0]?.redeemDate,
-      "YYYY-MM-DD"
-    )
-      .startOf("week")
-      .add(1, "day")
-      .utcOffset("GMT-00:00");
+  async generateReport(_code: string) {
+    const sumary = await this.sequelizeService.getSummary(_code);
+    const detail = await this.sequelizeService.allCalls(_code);
 
-    const lastWeekOfProgramCall = moment(
-      codeRedeemDate[0]?.redeemDate,
-      "YYYY-MM-DD"
-    )
-      .endOf("week")
-      .add(1, "day")
-      .utcOffset("GMT-00:00");
+    const totals = {
+      totalCalls: "=SUM(C2:C)",
+      totalTimeSpoken: "=SUM(D2:D)",
+    } as TotalsOfSumary;
 
-    let diff = moment.duration(
-      lastWeekOfProgramCall.diff(weekOfFirstProgramCall)
+    const groupedCallsByStudent = _.groupBy(
+      detail,
+      (student) => student.student_id
     );
 
-    let totalWeeks = Math.ceil(diff.asWeeks());
+    const longest = _.countBy(groupedCallsByStudent, "length");
+    const callsHeaderLength = Object.keys(longest).pop();
+    let callsHeader: string[] = [];
 
-    return { totalWeeks, weekOfFirstProgramCall, lastWeekOfProgramCall };
-  }
-
-  async getCallsByWeeksV2(_code: string) {
-    let { totalWeeks, weekOfFirstProgramCall } = await this.getWeeks(_code);
-    let callsDividedByWeeks: Week[] = [];
-    let formatedv2 = new Array();
-    for (let i = 0; i < totalWeeks + 1; i++) {
-      let from = weekOfFirstProgramCall
-        .add(i == 0 ? 0 : 1, "w")
-        .format("YYYY-MM-DD")
-        .toString();
-
-      let calls = await this.sequelizeService.queryCallsV2(_code, from);
-
-      callsDividedByWeeks.push({
-        calls: calls,
-        date: from,
-      });
+    if (callsHeaderLength) {
+      for (let i = 0; i < +callsHeaderLength; i++) {
+        callsHeader.push(
+          `Date of ${i + 1}${this.dayFormat(i)} Call`,
+          `Duration of ${i + 1}${this.dayFormat(i)} Call`
+        );
+      }
     }
-  }
 
-  async getTotalCallsV2(_code: string) {
-    let printableArray: any[] = new Array();
+    let toPrint:any[][] = [];
 
-    this.totalTimeSpoken = undefined;
+    let formatStudentsSummary = sumary.map(student => {
+      return [{
+        firstName: student.studentFirstName,
+        lastName:student.studentLastName,
+        totalCalls: student.studentTotalCalls,
+        totalTimeSpokenByStudent: student.studentTotalTimeSpoken
+      }]
+    })
+    toPrint.push(
+      [...this.header, ...callsHeader],
+      ["TOTAL", "", totals.totalCalls, this.totalTimeSpoken],
+      ["", "", "", ""],
+      [...formatStudentsSummary.flatMap((students) => students)]
+    );
 
-    const allCalls = await this.sequelizeService.queryTotalCallsV2(_code);
+    let sheetID = await this.sheetService.createFile(_code);
 
-    const studentsTotalSessionsOrdered = this.formatCallsToStudent(allCalls);
-
-    printableArray = this.formatPrintableStudent(studentsTotalSessionsOrdered);
-
-    return printableArray;
-  }
-
-  formatCallsToStudent(allCalls: CallTyped[]) {
-    const groupedCalls = _.groupBy(allCalls, (call) => call.StudentID);
-
-    const students: Student[] = _.map(groupedCalls, (callList, StudentID) => {
-      const student = callList[0] as CallTyped;
-
-      const studentCalls = callList.map((detail) => {
-        return {
-          id: +detail.CallID,
-          date: detail.CallDate,
-          duration: +detail.CallDuration,
-          recordingUrl: detail.CallRecord,
-        } as Call;
-      });
-
-      const totalTimeSpoken = callList.reduce(
-        (acc, row) => acc + +row.CallDuration,
-        0
-      );
-
-      return {
-        studentId: +StudentID,
-        firstName:
-          student.StudentFirstName.charAt(0).toUpperCase() +
-          student.StudentFirstName.slice(1),
-        lastName:
-          student.StudentLastName === "lastName"
-            ? " "
-            : student.StudentLastName,
-        totalTimeSpoken: totalTimeSpoken,
-        calls: studentCalls,
+    let print = [...toPrint.map(student => student)][3][0];
+    console.log("🚀 ~ file: CallsV2.ts:70 ~ CallsV2 ~ generateReport ~ print", print)
+    let writeFileResource: sheets_v4.Params$Resource$Spreadsheets$Values$Batchupdate =
+      {
+        spreadsheetId: sheetID,
+        requestBody: {
+          valueInputOption: "USER_ENTERED",
+          data: [
+            {
+              range: "Sheet1!A1:ZZ" + toPrint.length + 1,
+              majorDimension: "ROWS",
+              values: [...formatStudentsSummary.map(student => student)],
+            },
+          ],
+        },
       };
-    });
 
-    const studentsTotalSessionsOrdered = _.sortBy(students, [
-      "lastName",
-      "firstName",
-    ]);
+    await this.sheetService.writeFile(writeFileResource);
 
-    return studentsTotalSessionsOrdered;
-  }
-
-  formatPrintableStudent(studentsTotalSessions: Student[]) {
-    let printableArray: any[] = new Array();
-    for (const student of studentsTotalSessions) {
-      let callsDetail = <string[][]>student.calls?.map((call) => {
-        return [this.formatDate(call.date), this.formatDuration(call.duration)];
-      });
-
-      this.totalTimeSpoken = moment
-        .duration(this.totalTimeSpoken)
-        .add(this.formatDuration(student.totalTimeSpoken));
-
-      let detailedStudent = <string[]>[
-        student.firstName,
-        student.lastName,
-        student.calls?.length,
-        this.formatDuration(<number>student.totalTimeSpoken),
-        ...callsDetail.flatMap((call) => call),
-      ];
-      printableArray.push(detailedStudent);
-    }
-
-    return printableArray;
-  }
-
-  private formatDate(_date: Date) {
-    let date = new Date(_date);
-    let [dd, mm, yyyy] = [
-      date.getDate(),
-      date.getMonth() + 1,
-      date.getFullYear().toString().slice(2),
-    ];
-    let day = dd < 10 ? "0" + dd : dd;
-    let month = mm < 10 ? "0" + mm : mm;
-    return `${month}/${day}/${yyyy}`;
+    await this.driveService.shareFiles(
+      "anyone",
+      "franco.garancini@braintly.com",
+      "reader",
+      sheetID
+    );
+    // console.log("🚀 ~ file: CallsV2.ts:54 ~ CallsV2 ~ generateReport ~ groupedCallsByStudent", groupedCallsByStudent)
   }
 
   private formatDuration(_seconds: number) {
     let seconds = +_seconds;
     return new Date(seconds * 1000).toISOString().substring(11, 19);
+  }
+
+  dayFormat(i: number): string {
+    let n;
+    switch (i + 1) {
+      case 1:
+        n = "st";
+        break;
+      case 2:
+        n = "nd";
+        break;
+      case 3:
+        n = "rd";
+        break;
+      default:
+        n = "th";
+        break;
+    }
+    return n;
   }
 }
 
